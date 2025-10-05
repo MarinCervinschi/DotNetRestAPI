@@ -1,6 +1,6 @@
 namespace DotNetRestAPI.API.DTOs;
 
-public class CustomerReadDto
+public class CustomerDto
 {
     public int Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
