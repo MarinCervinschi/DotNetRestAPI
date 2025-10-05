@@ -18,11 +18,7 @@
 
     <ItemGroup>
       <Folder Include="API\Configuration\" />
-      <Folder Include="API\DTOs\" />
       <Folder Include="API\Middleware\" />
-      <Folder Include="Core\Interfaces\" />
-      <Folder Include="Core\Services\" />
-      <Folder Include="Infrastructure\Repositories\" />
     </ItemGroup>
 
 </Project>
