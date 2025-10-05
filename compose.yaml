@@ -1,0 +1,7 @@
+﻿services:
+  dotnetrestapi:
+    image: dotnetrestapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+
