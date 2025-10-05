@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using DotNetRestAPI.Core.Interfaces;
 
 namespace DotNetRestAPI.Core.Entities;
 
-public class Customer
+public class Customer : IEntity
 {
     public int Id { get; set; }
 

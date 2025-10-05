@@ -3,13 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNetRestAPI.Core.Entities;
 
+using DotNetRestAPI.Core.Interfaces;
+
 public enum BookStatus
 {
     Available = 0,
     Unavailable = 1,
 }
 
-public class Book
+public class Book : IEntity
 {
     public int Id { get; set; }
 
