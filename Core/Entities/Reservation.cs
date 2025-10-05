@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DotNetRestAPI.Models;
+namespace DotNetRestAPI.Core.Entities;
 
 public class Reservation
 {

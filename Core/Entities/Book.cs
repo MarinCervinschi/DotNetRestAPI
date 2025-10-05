@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotNetRestAPI.Models;
+namespace DotNetRestAPI.Core.Entities;
 
 public enum BookStatus
 {

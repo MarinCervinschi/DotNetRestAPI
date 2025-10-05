@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using DotNetRestAPI.Data;
+using DotNetRestAPI.Infrastructure.Data;
 using DotNetEnv;
 
 Env.Load();

@@ -1,7 +1,7 @@
+using DotNetRestAPI.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using DotNetRestAPI.Models;
 
-namespace DotNetRestAPI.Data;
+namespace DotNetRestAPI.Infrastructure.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
@@ -28,7 +28,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Customer>()
             .HasIndex(c => c.Email)
             .IsUnique();
-        
+
         modelBuilder.Entity<Book>()
             .HasIndex(b => b.ISBN)
             .IsUnique();
