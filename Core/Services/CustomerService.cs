@@ -5,26 +5,23 @@ using DotNetRestAPI.Core.Entities;
 
 namespace DotNetRestAPI.Core.Services;
 
-public class CustomerService(IRepository<Customer> repository, ILogger<CustomerService> logger)
+public class CustomerService(IRepository<Customer> repository)
     : ICustomerService
 {
     public async Task<CustomerDto?> GetCustomerByIdAsync(int id)
     {
-        logger.LogInformation("Fetching customer with ID {Id}", id);
         var customer = await repository.GetByIdAsync(id);
         return customer?.ToDto();
     }
 
     public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync()
     {
-        logger.LogInformation("Fetching all customers");
         var customers = await repository.GetAllAsync();
         return customers.Select(customer => customer.ToDto());
     }
 
     public async Task<CustomerDto> CreateCustomerAsync(CustomerCreateDto entity)
     {
-        logger.LogInformation("Creating a new customer");
         var customer = new Customer
         {
             FirstName = entity.FirstName,
@@ -38,7 +35,6 @@ public class CustomerService(IRepository<Customer> repository, ILogger<CustomerS
 
     public async Task<CustomerDto> UpdateCustomerAsync(int id, CustomerUpdateDto entity)
     {
-        logger.LogInformation("Updating customer with ID {Id}", id);
         var existingCustomer = await repository.GetByIdAsync(id);
         if (existingCustomer == null)
         {
@@ -55,7 +51,6 @@ public class CustomerService(IRepository<Customer> repository, ILogger<CustomerS
 
     public async Task<bool> DeleteCustomerAsync(int id)
     {
-        logger.LogInformation("Deleting customer with ID {Id}", id);
         return await repository.DeleteAsync(id);
     }
 
