@@ -1,29 +1,16 @@
-using Microsoft.EntityFrameworkCore;
-using DotNetRestAPI.Infrastructure.Data;
-using DotNetEnv;
-
-Env.Load();
+using DotNetRestAPI.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
-builder.Services.AddLogging();
-builder.Services.AddControllers();
-
-
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
-var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "dotnetrestapi";
-var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "password";
-
-var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDatabaseConfiguration();
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
+builder.Services.AddApiServices();
+builder.Services.AddHealthChecksConfiguration();
 
 var app = builder.Build();
+
+await app.Services.EnsureDatabaseCreated();
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,5 +22,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthCheckEndpoints();
 
 app.Run();
