@@ -1,16 +1,73 @@
 # DotNetRestAPI
 
-## Structure of the project
+## Database Commands
+
+### Install EF Core Tools (if needed)
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+### Migration Commands
+```bash
+# Create a new migration
+dotnet ef migrations add <MigrationName>
+
+# Create migration in specific directory
+dotnet ef migrations add <MigrationName> --output-dir Infrastructure/Data/Migrations
+
+# Example: create initial migration
+dotnet ef migrations add InitialCreate
+
+# Apply migrations to database
+dotnet ef database update
+
+# Apply a specific migration
+dotnet ef database update <MigrationName>
+
+# Remove the last migration (only if not yet applied)
+dotnet ef migrations remove
+
+# View migration status
+dotnet ef migrations list
+
+# Generate SQL script for migrations
+dotnet ef migrations script
+
+# Generate SQL script from specific migration
+dotnet ef migrations script <FromMigration> <ToMigration>
+```
+
+### Custom Migration Directory
+```bash
+dotnet ef migrations add InitialCreate --output-dir Infrastructure/Data/Migrations
+```
+
+### Database Commands
+```bash
+# Create database (if it doesn't exist)
+dotnet ef database update
+
+# Drop database
+dotnet ef database drop
+
+# View database information
+dotnet ef dbcontext info
+
+# Generate model from existing database (reverse engineering)
+dotnet ef dbcontext scaffold "ConnectionString" Npgsql.EntityFrameworkCore.PostgreSQL
+```
+
+## Project Structure
 
 ### 1. Core/ (Domain Layer)
 ```text
 Core/
 ├── Entities/
-│   ├── Book.cs           ← Entità dominio libro
-│   ├── Customer.cs       ← Entità dominio cliente  
-│   ├── Reservation.cs    ← Entità dominio prenotazione
+│   ├── Book.cs           ← Book domain entity
+│   ├── Customer.cs       ← Customer domain entity  
+│   ├── Reservation.cs    ← Reservation domain entity
 │   └── Common/
-│       └── BaseEntity.cs ← Entità base con Id, timestamps
+│       └── BaseEntity.cs ← Base entity with Id, timestamps
 ├── Interfaces/
 │   ├── Repositories/
 │   │   ├── IBookRepository.cs
@@ -21,9 +78,9 @@ Core/
 │       ├── ICustomerService.cs
 │       └── IReservationService.cs
 └── Services/
-    ├── BookService.cs    ← Logica business libri
-    ├── CustomerService.cs ← Logica business clienti
-    └── ReservationService.cs ← Logica business prenotazioni
+    ├── BookService.cs    ← Book business logic
+    ├── CustomerService.cs ← Customer business logic
+    └── ReservationService.cs ← Reservation business logic
 ```
 
 ### 2. Infrastructure/ (Data Access Layer)
@@ -43,8 +100,9 @@ Infrastructure/
 │   └── Common/
 │       └── BaseRepository.cs
 └── External/
-    └── EmailService.cs   ← Servizi esterni (email, etc.)
+    └── EmailService.cs   ← External services (email, etc.)
 ```
+
 ### 3. API/ (Presentation Layer)
 ```text
 API/
