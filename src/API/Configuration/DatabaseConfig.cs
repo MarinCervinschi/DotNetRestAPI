@@ -22,7 +22,7 @@ public static class DatabaseConfig
     public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services)
     {
         var connectionString = GetConnectionString();
-        Console.WriteLine(connectionString);
+        
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
