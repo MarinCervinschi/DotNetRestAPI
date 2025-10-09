@@ -10,7 +10,10 @@ builder.Services.AddHealthChecksConfiguration();
 
 var app = builder.Build();
 
-await app.Services.EnsureDatabaseCreated();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.Services.EnsureDatabaseCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -25,3 +28,7 @@ app.MapControllers();
 app.MapHealthCheckEndpoints();
 
 app.Run();
+
+public abstract partial class Program
+{
+}

@@ -21,8 +21,13 @@ public static class DatabaseConfig
 
     public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services)
     {
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Testing")
+        {
+            return services;
+        }
+
         var connectionString = GetConnectionString();
-        
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
