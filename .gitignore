@@ -7,3 +7,69 @@ riderModule.iml
 .idea/
 
 .env
+
+# Test Results and Coverage
+TestResults/
+**/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage.*.xml
+coverage.cobertura.xml
+coverage.opencover.xml
+*.runsettings.user
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Test Coverage Tools
+.coverage/
+coverage/
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+**/packages/*
+!**/packages/build/
+
+# Temporary files
+*.tmp
+*.temp
+*~
