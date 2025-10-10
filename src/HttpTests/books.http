@@ -13,6 +13,38 @@ Accept: application/json
 GET {{baseUrl}}/api/Books/999
 Accept: application/json
 
+### Search books by title
+GET {{baseUrl}}/api/Books/search?title=gatsby
+Accept: application/json
+
+### Search books by author
+GET {{baseUrl}}/api/Books/search?author=fitzgerald
+Accept: application/json
+
+### Search books by status (Available = 0)
+GET {{baseUrl}}/api/Books/search?status=0
+Accept: application/json
+
+### Search books by status (Unavailable = 1)
+GET {{baseUrl}}/api/Books/search?status=1
+Accept: application/json
+
+### Search books with multiple criteria
+GET {{baseUrl}}/api/Books/search?title=great&author=scott&status=0
+Accept: application/json
+
+### Search books with partial title match
+GET {{baseUrl}}/api/Books/search?title=great
+Accept: application/json
+
+### Search books with no results
+GET {{baseUrl}}/api/Books/search?title=nonexistentbook
+Accept: application/json
+
+### Search books with empty parameters (should return all books)
+GET {{baseUrl}}/api/Books/search
+Accept: application/json
+
 ### Create a new book
 POST {{baseUrl}}/api/Books
 Content-Type: application/json
@@ -73,4 +105,3 @@ DELETE {{baseUrl}}/api/Books/1
 
 ### Delete non-existent book (should return 404)
 DELETE {{baseUrl}}/api/Books/999
-

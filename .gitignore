@@ -8,6 +8,9 @@ riderModule.iml
 
 .env
 
+# MacOS
+.DS_Store
+
 # Test Results and Coverage
 TestResults/
 **/TestResults/

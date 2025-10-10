@@ -1,4 +1,5 @@
 using src.API.DTOs;
+using src.Core.Entities;
 
 namespace src.Core.Interfaces.Services;
 
@@ -12,4 +13,5 @@ public interface IBookService
     Task<bool> BookExistsAsync(int id);
     Task<bool> IsbnExistsAsync(string isbn);
     Task<bool> IsbnExistsAsync(string isbn, int excludeBookId);
+    Task<IEnumerable<BookDto>> SearchBooksAsync(string? title = null, string? author = null, BookStatus? status = null);
 }

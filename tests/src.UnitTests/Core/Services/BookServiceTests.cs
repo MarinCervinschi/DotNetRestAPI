@@ -435,4 +435,272 @@ public class BookServiceTests
         result.Should().BeFalse();
         _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
     }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithTitleOnly_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchTitle = "Great";
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("The Great Gatsby").WithAuthor("F. Scott Fitzgerald").Build(),
+            BookBuilder.New().WithId(2).WithTitle("Great Expectations").WithAuthor("Charles Dickens").Build(),
+            BookBuilder.New().WithId(3).WithTitle("To Kill a Mockingbird").WithAuthor("Harper Lee").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: searchTitle);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Title == "The Great Gatsby");
+        resultList.Should().Contain(b => b.Title == "Great Expectations");
+        resultList.Should().NotContain(b => b.Title == "To Kill a Mockingbird");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithAuthorOnly_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchAuthor = "Dickens";
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("Great Expectations").WithAuthor("Charles Dickens").Build(),
+            BookBuilder.New().WithId(2).WithTitle("A Tale of Two Cities").WithAuthor("Charles Dickens").Build(),
+            BookBuilder.New().WithId(3).WithTitle("The Great Gatsby").WithAuthor("F. Scott Fitzgerald").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(author: searchAuthor);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Title == "Great Expectations");
+        resultList.Should().Contain(b => b.Title == "A Tale of Two Cities");
+        resultList.Should().NotContain(b => b.Author == "F. Scott Fitzgerald");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithStatusOnly_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchStatus = BookStatus.Unavailable;
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("Available Book").WithAvailableStatus().Build(),
+            BookBuilder.New().WithId(2).WithTitle("Unavailable Book 1").WithUnavailableStatus().Build(),
+            BookBuilder.New().WithId(3).WithTitle("Unavailable Book 2").WithUnavailableStatus().Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(status: searchStatus);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Title == "Unavailable Book 1");
+        resultList.Should().Contain(b => b.Title == "Unavailable Book 2");
+        resultList.Should().NotContain(b => b.Title == "Available Book");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithMultipleCriteria_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchTitle = "Great";
+        var searchAuthor = "Fitzgerald";
+        var searchStatus = BookStatus.Available;
+        
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("The Great Gatsby").WithAuthor("F. Scott Fitzgerald").WithAvailableStatus().Build(),
+            BookBuilder.New().WithId(2).WithTitle("Great Expectations").WithAuthor("Charles Dickens").WithAvailableStatus().Build(),
+            BookBuilder.New().WithId(3).WithTitle("The Great Gatsby").WithAuthor("F. Scott Fitzgerald").WithUnavailableStatus().Build(),
+            BookBuilder.New().WithId(4).WithTitle("Another Book").WithAuthor("F. Scott Fitzgerald").WithAvailableStatus().Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: searchTitle, author: searchAuthor, status: searchStatus);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(1);
+        resultList[0].Title.Should().Be("The Great Gatsby");
+        resultList[0].Author.Should().Be("F. Scott Fitzgerald");
+        resultList[0].Status.Should().Be(BookStatus.Available);
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithCaseInsensitiveTitle_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchTitle = "GREAT";
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("The Great Gatsby").Build(),
+            BookBuilder.New().WithId(2).WithTitle("great expectations").Build(),
+            BookBuilder.New().WithId(3).WithTitle("To Kill a Mockingbird").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: searchTitle);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Title == "The Great Gatsby");
+        resultList.Should().Contain(b => b.Title == "great expectations");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithCaseInsensitiveAuthor_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var searchAuthor = "FITZGERALD";
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithAuthor("F. Scott Fitzgerald").Build(),
+            BookBuilder.New().WithId(2).WithAuthor("fitzgerald").Build(),
+            BookBuilder.New().WithId(3).WithAuthor("Charles Dickens").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(author: searchAuthor);
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Author == "F. Scott Fitzgerald");
+        resultList.Should().Contain(b => b.Author == "fitzgerald");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithNoMatches_ReturnsEmptyList()
+    {
+        // Arrange
+        var searchTitle = "NonExistentBook";
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("The Great Gatsby").Build(),
+            BookBuilder.New().WithId(2).WithTitle("Great Expectations").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: searchTitle);
+
+        // Assert
+        result.Should().BeEmpty();
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithNullAndEmptyParameters_ReturnsAllBooks()
+    {
+        // Arrange
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("Book 1").Build(),
+            BookBuilder.New().WithId(2).WithTitle("Book 2").Build(),
+            BookBuilder.New().WithId(3).WithTitle("Book 3").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync();
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(3);
+        resultList.Should().Contain(b => b.Title == "Book 1");
+        resultList.Should().Contain(b => b.Title == "Book 2");
+        resultList.Should().Contain(b => b.Title == "Book 3");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithEmptyStringParameters_ReturnsAllBooks()
+    {
+        // Arrange
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("Book 1").Build(),
+            BookBuilder.New().WithId(2).WithTitle("Book 2").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: "", author: "   ");
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SearchBooksAsync_WithPartialMatches_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var books = new List<Book>
+        {
+            BookBuilder.New().WithId(1).WithTitle("Harry Potter and the Philosopher's Stone").WithAuthor("J.K. Rowling").Build(),
+            BookBuilder.New().WithId(2).WithTitle("Harry Potter and the Chamber of Secrets").WithAuthor("J.K. Rowling").Build(),
+            BookBuilder.New().WithId(3).WithTitle("The Hobbit").WithAuthor("J.R.R. Tolkien").Build()
+        };
+
+        _mockRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(books);
+
+        // Act
+        var result = await _bookService.SearchBooksAsync(title: "Potter", author: "Rowling");
+
+        // Assert
+        var resultList = result.ToList();
+        resultList.Should().HaveCount(2);
+        resultList.Should().Contain(b => b.Title.Contains("Harry Potter"));
+        resultList.Should().NotContain(b => b.Title == "The Hobbit");
+
+        _mockRepository.Verify(r => r.GetAllAsync(), Times.Once);
+    }
 }

@@ -2,7 +2,6 @@ using src.API.DTOs;
 using src.Core.Entities;
 using src.Core.Interfaces;
 using src.Core.Interfaces.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace src.Core.Services;
 
@@ -82,6 +81,31 @@ public class BookService(IRepository<Book> repository)
     {
         var books = await repository.GetAllAsync();
         return books.Any(b => b.ISBN.Equals(isbn, StringComparison.OrdinalIgnoreCase) && b.Id != excludeBookId);
+    }
+
+    public async Task<IEnumerable<BookDto>> SearchBooksAsync(string? title = null, string? author = null,
+        BookStatus? status = null)
+    {
+        var books = await repository.GetAllAsync();
+
+        var query = books.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            query = query.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.IsNullOrWhiteSpace(author))
+        {
+            query = query.Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (status.HasValue)
+        {
+            query = query.Where(b => b.Status == status.Value);
+        }
+
+        return query.Select(book => book.ToDto()).ToList();
     }
 }
 

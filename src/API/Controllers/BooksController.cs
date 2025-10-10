@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using src.API.DTOs;
 using src.Core.Interfaces.Services;
+using src.Core.Entities;
 
 namespace src.API.Controllers;
 
@@ -30,6 +31,20 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         if (book != null) return Ok(book);
         logger.LogWarning("Book with id {Id} not found", id);
         return NotFound();
+    }
+
+    [HttpGet("search")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<BookDto>>> SearchBooks(
+        [FromQuery] string? title = null,
+        [FromQuery] string? author = null,
+        [FromQuery] BookStatus? status = null)
+    {
+        logger.LogInformation("Searching books with title: {Title}, author: {Author}, status: {Status}",
+            title, author, status);
+
+        var books = await bookService.SearchBooksAsync(title, author, status);
+        return Ok(books);
     }
 
     [HttpPost]
