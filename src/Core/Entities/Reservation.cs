@@ -13,7 +13,7 @@ public class Reservation: IEntity
     [Required] public int BookId { get; set; }
 
     // Date fields
-    [Required] public DateTime ReservationDate { get; set; } = DateTime.UtcNow;
+    [Required] public DateTime ReservationDate { get; set; }
 
     [Required] public DateTime ExpirationDate { get; set; }
 
