@@ -99,7 +99,7 @@ public class ReservationExpirationService(
 
                 break;
 
-            case ExpirationHandlingStrategy.DeleteReservation:
+            /*case ExpirationHandlingStrategy.DeleteReservation:
                 logger.LogInformation("Deleting expired reservation {ReservationId} for book {BookId}",
                     reservation.Id, reservation.BookId);
 
@@ -120,7 +120,7 @@ public class ReservationExpirationService(
 
             default:
                 logger.LogWarning("Unknown expiration handling strategy: {Strategy}", Strategy);
-                break;
+                break;*/
         }
     }
 }
