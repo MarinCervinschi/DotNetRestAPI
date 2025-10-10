@@ -5,6 +5,7 @@ REST API for library management with .NET 9 and PostgreSQL.
 ## Main Commands
 
 ### Setup & Launch
+
 ```bash
 # Install EF Core Tools
 dotnet tool install --global dotnet-ef
@@ -20,6 +21,7 @@ dotnet run --project src
 ```
 
 ### Database
+
 ```bash
 # Create new migration
 dotnet ef migrations add <MigrationName> --project src --output-dir Infrastructure/Data/Migrations
@@ -35,6 +37,7 @@ dotnet ef database drop --project src && dotnet ef database update --project src
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 dotnet test
@@ -45,16 +48,19 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ## API Endpoints
 
-**Base URL:** `http://localhost:5000/api`
+**Base URL:** `http://localhost:5163/`
 
 ### Books
+
 - `GET /books` - List all books
 - `GET /books/{id}` - Get book details
+- `GET /books/search` - Search books by title, author, and status
 - `POST /books` - Create new book
 - `PUT /books/{id}` - Update book
 - `DELETE /books/{id}` - Delete book
 
 ### Customers
+
 - `GET /customers` - List all customers
 - `GET /customers/{id}` - Get customer details
 - `POST /customers` - Create new customer
@@ -62,6 +68,7 @@ dotnet test --collect:"XPlat Code Coverage"
 - `DELETE /customers/{id}` - Delete customer
 
 ### Reservations
+
 - `GET /reservations` - List all reservations
 - `GET /reservations/{id}` - Get reservation details
 - `GET /reservations/customer/{customerId}` - Get reservations by customer
@@ -70,6 +77,7 @@ dotnet test --collect:"XPlat Code Coverage"
 - `DELETE /reservations/{id}` - Delete reservation
 
 ### Health & Info
+
 - `GET /health` - Application status
 - **Swagger UI:** `http://localhost:5000/swagger` (development only)
 
