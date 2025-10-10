@@ -1,4 +1,5 @@
 using src.Core.Interfaces;
+using src.Core.Interfaces.Repositories;
 using src.Core.Interfaces.Services;
 using src.Core.Services;
 using src.Infrastructure.Repositories;
@@ -10,10 +11,14 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        
+        services.AddScoped<IReservationRepository, ReservationRepository>();
 
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IBookService, BookService>();
-        // services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<IReservationService, ReservationService>();
+
+        services.AddHostedService<ReservationExpirationService>();
 
         return services;
     }
