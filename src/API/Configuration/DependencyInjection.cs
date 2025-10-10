@@ -12,7 +12,7 @@ public static class DependencyInjection
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         services.AddScoped<ICustomerService, CustomerService>();
-        // services.AddScoped<IBookService, BookService>();
+        services.AddScoped<IBookService, BookService>();
         // services.AddScoped<IReservationService, ReservationService>();
 
         return services;
