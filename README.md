@@ -1,131 +1,105 @@
 # DotNetRestAPI
 
-## Database Commands
+REST API for library management with .NET 9 and PostgreSQL.
 
-### Install EF Core Tools (if needed)
+## Main Commands
+
+### Setup & Launch
 ```bash
+# Install EF Core Tools
 dotnet tool install --global dotnet-ef
+
+# Start PostgreSQL database
+docker-compose up -d postgres
+
+# Apply migrations
+dotnet ef database update --project src
+
+# Start API
+dotnet run --project src
 ```
 
-### Migration Commands
+### Database
 ```bash
-# Create a new migration
-dotnet ef migrations add <MigrationName>
+# Create new migration
+dotnet ef migrations add <MigrationName> --project src --output-dir Infrastructure/Data/Migrations
 
-# Create migration in specific directory
-dotnet ef migrations add <MigrationName> --output-dir Infrastructure/Data/Migrations
+# Apply migrations
+dotnet ef database update --project src
 
-# Example: create initial migration
-dotnet ef migrations add InitialCreate
+# Remove last migration (if not applied)
+dotnet ef migrations remove --project src
 
-# Apply migrations to database
-dotnet ef database update
-
-# Apply a specific migration
-dotnet ef database update <MigrationName>
-
-# Remove the last migration (only if not yet applied)
-dotnet ef migrations remove
-
-# View migration status
-dotnet ef migrations list
-
-# Generate SQL script for migrations
-dotnet ef migrations script
-
-# Generate SQL script from specific migration
-dotnet ef migrations script <FromMigration> <ToMigration>
+# Reset database
+dotnet ef database drop --project src && dotnet ef database update --project src
 ```
 
-### Custom Migration Directory
+### Testing
 ```bash
-dotnet ef migrations add InitialCreate --output-dir Infrastructure/Data/Migrations
+# Run all tests
+dotnet test
+
+# Run tests with coverage
+dotnet test --collect:"XPlat Code Coverage"
 ```
 
-### Database Commands
-```bash
-# Create database (if it doesn't exist)
-dotnet ef database update
+## API Endpoints
 
-# Drop database
-dotnet ef database drop
+**Base URL:** `http://localhost:5000/api`
 
-# View database information
-dotnet ef dbcontext info
+### Books
+- `GET /books` - List all books
+- `GET /books/{id}` - Get book details
+- `POST /books` - Create new book
+- `PUT /books/{id}` - Update book
+- `DELETE /books/{id}` - Delete book
 
-# Generate model from existing database (reverse engineering)
-dotnet ef dbcontext scaffold "ConnectionString" Npgsql.EntityFrameworkCore.PostgreSQL
-```
+### Customers
+- `GET /customers` - List all customers
+- `GET /customers/{id}` - Get customer details
+- `POST /customers` - Create new customer
+- `PUT /customers/{id}` - Update customer
+- `DELETE /customers/{id}` - Delete customer
+
+### Reservations
+- `GET /reservations` - List all reservations
+- `GET /reservations/{id}` - Get reservation details
+- `GET /reservations/customer/{customerId}` - Get reservations by customer
+- `GET /reservations/book/{bookId}` - Get reservations by book
+- `POST /reservations` - Create new reservation
+- `DELETE /reservations/{id}` - Delete reservation
+
+### Health & Info
+- `GET /health` - Application status
+- **Swagger UI:** `http://localhost:5000/swagger` (development only)
+
+## Technologies
+
+- **.NET 9** - Main framework
+- **PostgreSQL** - Database
+- **Entity Framework Core** - ORM
+- **Docker** - Containerization
+- **xUnit + FluentAssertions + Moq** - Testing
+- **Swagger/OpenAPI** - API documentation
 
 ## Project Structure
 
-### 1. Core/ (Domain Layer)
-```text
-Core/
-├── Entities/
-│   ├── Book.cs           ← Book domain entity
-│   ├── Customer.cs       ← Customer domain entity  
-│   ├── Reservation.cs    ← Reservation domain entity
-│   └── Common/
-│       └── BaseEntity.cs ← Base entity with Id, timestamps
-├── Interfaces/
-│   ├── Repositories/
-│   │   ├── IBookRepository.cs
-│   │   ├── ICustomerRepository.cs  
-│   │   └── IReservationRepository.cs
-│   └── Services/
-│       ├── IBookService.cs
-│       ├── ICustomerService.cs
-│       └── IReservationService.cs
-└── Services/
-    ├── BookService.cs    ← Book business logic
-    ├── CustomerService.cs ← Customer business logic
-    └── ReservationService.cs ← Reservation business logic
+```
+src/
+├── API/           # Controllers, DTOs, Configuration
+├── Core/          # Entities, Services, Interfaces
+└── Infrastructure/ # Data Access, Repositories
+
+tests/
+└── src.UnitTests/ # Unit Tests with Builders
 ```
 
-### 2. Infrastructure/ (Data Access Layer)
-```text
-Infrastructure/
-├── Data/
-│   ├── ApplicationDbContext.cs ← EF Context
-│   ├── Configurations/
-│   │   ├── BookConfiguration.cs
-│   │   ├── CustomerConfiguration.cs
-│   │   └── ReservationConfiguration.cs
-│   └── Migrations/
-├── Repositories/
-│   ├── BookRepository.cs
-│   ├── CustomerRepository.cs
-│   ├── ReservationRepository.cs  
-│   └── Common/
-│       └── BaseRepository.cs
-└── External/
-    └── EmailService.cs   ← External services (email, etc.)
-```
+## Features
 
-### 3. API/ (Presentation Layer)
-```text
-API/
-├── Controllers/
-│   ├── BooksController.cs
-│   ├── CustomersController.cs
-│   └── ReservationsController.cs
-├── DTOs/
-│   ├── Book/
-│   │   ├── BookDto.cs
-│   │   ├── CreateBookDto.cs
-│   │   └── UpdateBookDto.cs
-│   ├── Customer/
-│   │   ├── CustomerDto.cs
-│   │   ├── CreateCustomerDto.cs
-│   │   └── UpdateCustomerDto.cs
-│   └── Reservation/
-│       ├── ReservationDto.cs
-│       ├── CreateReservationDto.cs
-│       └── UpdateReservationDto.cs
-├── Configuration/
-│   ├── DependencyInjection.cs
-│   └── DatabaseConfig.cs
-└── Middleware/
-    └── ExceptionMiddleware.cs
-```
+- **Complete CRUD** for Books, Customers, Reservations
+- **Automatic input validation** with Data Annotations
+- **Health checks** for database
+- **Structured logging**
+- **Background service** for expired reservations management
+- **Clean Architecture** with layer separation
+- **Complete unit tests** with 90%+ coverage
