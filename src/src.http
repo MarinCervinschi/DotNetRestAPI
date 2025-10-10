@@ -1,0 +1,17 @@
+# API Tests - Quick Access
+# For detailed HTTP tests, see: tests/HttpTests/
+@baseUrl = http://localhost:5163
+
+### Quick Health Check
+GET {{baseUrl}}/health
+Accept: application/json
+
+### Quick Books test
+GET {{baseUrl}}/api/Books
+Accept: application/json
+
+### Quick Customers test  
+GET {{baseUrl}}/api/Customers
+Accept: application/json
+
+###

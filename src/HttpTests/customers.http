@@ -1,0 +1,71 @@
+# Customers API Tests
+@baseUrl = http://localhost:5163
+
+### Get all customers
+GET {{baseUrl}}/api/Customers
+Accept: application/json
+
+### Get customer by ID
+GET {{baseUrl}}/api/Customers/1
+Accept: application/json
+
+### Get non-existent customer (should return 404)
+GET {{baseUrl}}/api/Customers/999
+Accept: application/json
+
+### Create a new customer
+POST {{baseUrl}}/api/Customers
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com"
+}
+
+### Create customer with duplicate email (if email is unique)
+POST {{baseUrl}}/api/Customers
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "email": "john.doe@example.com"
+}
+
+### Create customer with invalid data (should return 400 Bad Request)
+POST {{baseUrl}}/api/Customers
+Content-Type: application/json
+
+{
+  "firstName": "",
+  "lastName": "Doe",
+  "email": "invalid-email"
+}
+
+### Update a customer
+PUT {{baseUrl}}/api/Customers/1
+Content-Type: application/json
+
+{
+  "firstName": "John Updated",
+  "lastName": "Doe Updated",
+  "email": "john.updated@example.com"
+}
+
+
+### Update non-existent customer (should return 404)
+PUT {{baseUrl}}/api/Customers/999
+Content-Type: application/json
+
+{
+  "firstName": "Non-existent",
+  "lastName": "Customer",
+  "email": "nonexistent@example.com"
+}
+
+### Delete a customer
+DELETE {{baseUrl}}/api/Customers/1
+
+### Delete non-existent customer (should return 404)
+DELETE {{baseUrl}}/api/Customers/999
