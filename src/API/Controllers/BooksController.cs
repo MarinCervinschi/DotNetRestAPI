@@ -6,7 +6,7 @@ using src.Core.Entities;
 namespace src.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [Produces("application/json")]
 public class BooksController(IBookService bookService, ILogger<BooksController> logger)
     : ControllerBase

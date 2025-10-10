@@ -5,7 +5,7 @@ using src.Core.Interfaces.Services;
 namespace src.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [Produces("application/json")]
 public class ReservationsController(IReservationService reservationService, ILogger<ReservationsController> logger)
     : ControllerBase
