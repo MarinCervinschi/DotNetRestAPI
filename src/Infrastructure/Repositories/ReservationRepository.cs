@@ -27,7 +27,7 @@ public class ReservationRepository(ApplicationDbContext context)
                     $"Book with ID {reservation.BookId} is not available for reservation.");
             }
 
-            var createdReservation = await CreateAsync(reservation);
+            var createdReservation = await base.CreateAsync(reservation);
 
             book.Status = BookStatus.Unavailable;
             _context.Books.Update(book);
@@ -56,7 +56,7 @@ public class ReservationRepository(ApplicationDbContext context)
                 return false;
             }
 
-            var deleted = await DeleteAsync(id);
+            var deleted = await base.DeleteAsync(id);
             if (!deleted)
             {
                 return false;
