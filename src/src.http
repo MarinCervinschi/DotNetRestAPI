@@ -7,11 +7,11 @@ GET {{baseUrl}}/health
 Accept: application/json
 
 ### Quick Books test
-GET {{baseUrl}}/api/Books
+GET {{baseUrl}}/Books
 Accept: application/json
 
 ### Quick Customers test  
-GET {{baseUrl}}/api/Customers
+GET {{baseUrl}}/Customers
 Accept: application/json
 
 ###

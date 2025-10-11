@@ -2,35 +2,35 @@
 @baseUrl = http://localhost:5163
 
 ### Get all reservations
-GET {{baseUrl}}/api/Reservations
+GET {{baseUrl}}/Reservations
 Accept: application/json
 
 ### Get reservation by ID
-GET {{baseUrl}}/api/Reservations/1
+GET {{baseUrl}}/Reservations/1
 Accept: application/json
 
 ### Get non-existent reservation (should return 404)
-GET {{baseUrl}}/api/Reservations/999
+GET {{baseUrl}}/Reservations/999
 Accept: application/json
 
 ### Get reservations by customer ID
-GET {{baseUrl}}/api/Reservations/customer/1
+GET {{baseUrl}}/Reservations/customer/1
 Accept: application/json
 
 ### Get reservations by book ID
-GET {{baseUrl}}/api/Reservations/book/1
+GET {{baseUrl}}/Reservations/book/1
 Accept: application/json
 
 ### Get all books to check their status
-GET {{baseUrl}}/api/Books
+GET {{baseUrl}}/Books
 Accept: application/json
 
 ### Get specific book to verify its status before reservation
-GET {{baseUrl}}/api/Books/1
+GET {{baseUrl}}/Books/1
 Accept: application/json
 
 ### Create a new reservation
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -39,11 +39,11 @@ Content-Type: application/json
 }
 
 ### Verify book status changed to Unavailable after reservation
-GET {{baseUrl}}/api/Books/1
+GET {{baseUrl}}/Books/1
 Accept: application/json
 
 ### Try to create another reservation for the same book (should fail with 409 Conflict)
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -52,7 +52,7 @@ Content-Type: application/json
 }
 
 ### Create reservation with invalid customer (should return 404)
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -61,7 +61,7 @@ Content-Type: application/json
 }
 
 ### Create reservation with invalid book (should return 404)
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -70,7 +70,7 @@ Content-Type: application/json
 }
 
 ### Create a second valid reservation with different book
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -79,34 +79,34 @@ Content-Type: application/json
 }
 
 ### Get all reservations to see both reservations
-GET {{baseUrl}}/api/Reservations
+GET {{baseUrl}}/Reservations
 Accept: application/json
 
 ### Get reservations for customer 1
-GET {{baseUrl}}/api/Reservations/customer/1
+GET {{baseUrl}}/Reservations/customer/1
 Accept: application/json
 
 ### Get reservations for customer 2
-GET {{baseUrl}}/api/Reservations/customer/2
+GET {{baseUrl}}/Reservations/customer/2
 Accept: application/json
 
 ### Get reservations for book 1
-GET {{baseUrl}}/api/Reservations/book/1
+GET {{baseUrl}}/Reservations/book/1
 Accept: application/json
 
 ### Get reservations for book 2
-GET {{baseUrl}}/api/Reservations/book/2
+GET {{baseUrl}}/Reservations/book/2
 Accept: application/json
 
 ### Delete first reservation
-DELETE {{baseUrl}}/api/Reservations/1
+DELETE {{baseUrl}}/Reservations/1
 
 ### Verify book 1 is now Available again after reservation deletion
-GET {{baseUrl}}/api/Books/1
+GET {{baseUrl}}/Books/1
 Accept: application/json
 
 ### Create reservation again for the now-available book
-POST {{baseUrl}}/api/Reservations
+POST {{baseUrl}}/Reservations
 Content-Type: application/json
 
 {
@@ -116,12 +116,12 @@ Content-Type: application/json
 
 
 ### Delete non-existent reservation (should return 404)
-DELETE {{baseUrl}}/api/Reservations/999
+DELETE {{baseUrl}}/Reservations/999
 
 ### Get all books to verify final status
-GET {{baseUrl}}/api/Books
+GET {{baseUrl}}/Books
 Accept: application/json
 
 ### Get all reservations to verify final state
-GET {{baseUrl}}/api/Reservations
+GET {{baseUrl}}/Reservations
 Accept: application/json
