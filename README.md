@@ -14,7 +14,7 @@ dotnet tool install --global dotnet-ef
 docker-compose up -d postgres
 
 # Apply migrations
-dotnet ef database update --project src
+dotnet ef database update
 
 # Start API
 dotnet run --project src
@@ -24,17 +24,40 @@ dotnet run --project src
 
 ```bash
 # Create new migration
-dotnet ef migrations add <MigrationName> --project src --output-dir Infrastructure/Data/Migrations
+dotnet ef migrations add <MigrationName> --output-dir src/Infrastructure/Data/Migrations
 
 # Apply migrations
-dotnet ef database update --project src
+dotnet ef database update
 
 # Remove last migration (if not applied)
-dotnet ef migrations remove --project src
+dotnet ef migrations remove
 
 # Reset database
-dotnet ef database drop --project src && dotnet ef database update --project src
+dotnet ef database drop && dotnet ef database update
 ```
+
+### Database Seeding
+
+The project includes sample data for development via migrations:
+
+```bash
+# Populate database with sample data
+dotnet ef database update
+
+# Reset database (clean + repopulate)
+dotnet ef database drop --force && dotnet ef database update
+```
+
+**How `update` works:**
+- Applies all pending migrations to the database
+- Executes the `SeedInitialData` migration which inserts sample data
+- If database doesn't exist, creates it automatically
+- If seed data already exists, skips insertion (migrations run only once)
+
+**Sample data includes:**
+- 10 books (classic literature)
+- 8 customers with realistic names and emails
+- 5 reservations linking customers to books (with realistic dates)
 
 ### Testing
 
