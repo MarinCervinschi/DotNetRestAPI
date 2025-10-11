@@ -70,7 +70,6 @@ public static class CustomerExtensions
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
-            //Reservations = customer.Reservations?.Select(r => r.ToDto()).ToList() ?? new List<ReservationReadDto>()
         };
     }
 }

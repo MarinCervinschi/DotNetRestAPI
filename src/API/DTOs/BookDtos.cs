@@ -11,7 +11,6 @@ public class BookDto
     public string ISBN { get; set; } = string.Empty;
 
     public BookStatus Status { get; set; }
-    // public List<ReservationReadDto> Reservations { get; set; } = new();
 }
 
 public class BookCreateDto

@@ -9,7 +9,6 @@ public class CustomerDto
     public string LastName { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
-    // public List<ReservationReadDto> Reservations { get; set; } = new();
 }
 
 public class CustomerCreateDto

@@ -120,7 +120,6 @@ public static class BookExtensions
             Author = book.Author,
             ISBN = book.ISBN,
             Status = book.Status,
-            //Reservations = book.Reservations?.Select(r => r.ToDto()).ToList() ?? new List<ReservationReadDto>()
         };
     }
 }
