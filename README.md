@@ -22,6 +22,14 @@ dotnet run --project src
 
 ### Database
 
+To use this scripts ensure you are in the `src` directory:
+
+```bash
+cd src
+```
+
+then run the following commands:
+
 ```bash
 # Create new migration
 dotnet ef migrations add <MigrationName> --output-dir src/Infrastructure/Data/Migrations
@@ -53,11 +61,6 @@ dotnet ef database drop --force && dotnet ef database update
 - Executes the `SeedInitialData` migration which inserts sample data
 - If database doesn't exist, creates it automatically
 - If seed data already exists, skips insertion (migrations run only once)
-
-**Sample data includes:**
-- 10 books (classic literature)
-- 8 customers with realistic names and emails
-- 5 reservations linking customers to books (with realistic dates)
 
 ### Testing
 
