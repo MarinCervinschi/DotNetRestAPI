@@ -238,7 +238,7 @@ public class ReservationServiceTests
         _mockCustomerService.Setup(s => s.CustomerExistsAsync(1))
             .ReturnsAsync(true);
 
-        _mockReservationRepository.Setup(r => r.CreateReservationWithBookUpdateAsync(It.IsAny<Reservation>()))
+        _mockReservationRepository.Setup(r => r.CreateAsync(It.IsAny<Reservation>()))
             .ReturnsAsync(createdReservation);
 
         _mockCustomerService.Setup(s => s.GetCustomerByIdAsync(1))
@@ -259,7 +259,7 @@ public class ReservationServiceTests
         result.Book.Should().NotBeNull();
 
         _mockCustomerService.Verify(s => s.CustomerExistsAsync(1), Times.Once);
-        _mockReservationRepository.Verify(r => r.CreateReservationWithBookUpdateAsync(It.Is<Reservation>(res =>
+        _mockReservationRepository.Verify(r => r.CreateAsync(It.Is<Reservation>(res =>
             res.CustomerId == 1 &&
             res.BookId == 1 &&
             res.ReservationDate <= DateTime.UtcNow &&
@@ -284,7 +284,7 @@ public class ReservationServiceTests
 
         exception.Message.Should().Contain("Customer with ID 999 not found.");
         _mockCustomerService.Verify(s => s.CustomerExistsAsync(999), Times.Once);
-        _mockReservationRepository.Verify(r => r.CreateReservationWithBookUpdateAsync(It.IsAny<Reservation>()),
+        _mockReservationRepository.Verify(r => r.CreateAsync(It.IsAny<Reservation>()),
             Times.Never);
     }
 
@@ -293,7 +293,7 @@ public class ReservationServiceTests
     {
         // Arrange
         var reservationId = 1;
-        _mockReservationRepository.Setup(r => r.DeleteReservationWithBookUpdateAsync(reservationId))
+        _mockReservationRepository.Setup(r => r.DeleteAsync(reservationId))
             .ReturnsAsync(true);
 
         // Act
@@ -301,7 +301,7 @@ public class ReservationServiceTests
 
         // Assert
         result.Should().BeTrue();
-        _mockReservationRepository.Verify(r => r.DeleteReservationWithBookUpdateAsync(reservationId), Times.Once);
+        _mockReservationRepository.Verify(r => r.DeleteAsync(reservationId), Times.Once);
     }
 
     [Fact]
@@ -309,7 +309,7 @@ public class ReservationServiceTests
     {
         // Arrange
         var reservationId = 999;
-        _mockReservationRepository.Setup(r => r.DeleteReservationWithBookUpdateAsync(reservationId))
+        _mockReservationRepository.Setup(r => r.DeleteAsync(reservationId))
             .ReturnsAsync(false);
 
         // Act
@@ -317,7 +317,7 @@ public class ReservationServiceTests
 
         // Assert
         result.Should().BeFalse();
-        _mockReservationRepository.Verify(r => r.DeleteReservationWithBookUpdateAsync(reservationId), Times.Once);
+        _mockReservationRepository.Verify(r => r.DeleteAsync(reservationId), Times.Once);
     }
 
     [Fact]

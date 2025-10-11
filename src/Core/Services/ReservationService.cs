@@ -78,13 +78,13 @@ public class ReservationService(
             ExpirationDate = DateTime.UtcNow.AddDays(7)
         };
 
-        var createdReservation = await reservationRepository.CreateReservationWithBookUpdateAsync(reservation);
+        var createdReservation = await reservationRepository.CreateAsync(reservation);
         return await createdReservation.ToDtoAsync(customerService, bookService);
     }
 
     public async Task<bool> DeleteReservationAsync(int id)
     {
-        return await reservationRepository.DeleteReservationWithBookUpdateAsync(id);
+        return await reservationRepository.DeleteAsync(id);
     }
 
     public async Task<bool> ReservationExistsAsync(int id)

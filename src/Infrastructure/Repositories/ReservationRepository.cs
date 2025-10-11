@@ -9,7 +9,7 @@ public class ReservationRepository(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<Reservation> CreateReservationWithBookUpdateAsync(Reservation reservation)
+    public override async Task<Reservation> CreateAsync(Reservation reservation)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -44,7 +44,7 @@ public class ReservationRepository(ApplicationDbContext context)
         }
     }
 
-    public async Task<bool> DeleteReservationWithBookUpdateAsync(int id)
+    public override async Task<bool> DeleteAsync(int id)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync();
 
