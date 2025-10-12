@@ -47,6 +47,12 @@ public class AdminController(IAdminService adminService, ILogger<AdminController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AdminDto>> CreateAdmin([FromBody] AdminCreateDto createDto)
     {
+        if (!ModelState.IsValid)
+        {
+            logger.LogWarning("Invalid model state for creating admin");
+            return BadRequest(ModelState);
+        }
+
         logger.LogInformation("Creating new admin with username: {Username}", createDto.Username);
 
         var admin = await adminService.CreateAdminAsync(createDto.Username, createDto.Email, createDto.Password);
