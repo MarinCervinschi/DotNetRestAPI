@@ -5,6 +5,9 @@ using src.Core.Interfaces.Services;
 
 namespace src.API.Controllers;
 
+/// <summary>
+/// Admin management endpoints - requires JWT authentication
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
@@ -12,6 +15,10 @@ namespace src.API.Controllers;
 public class AdminController(IAdminService adminService, ILogger<AdminController> logger)
     : ControllerBase
 {
+    /// <summary>
+    /// Get admin information by username
+    /// </summary>
+    /// <param name="username">Admin username</param>
     [HttpGet("{username}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -30,6 +37,10 @@ public class AdminController(IAdminService adminService, ILogger<AdminController
         return Ok(admin);
     }
 
+    /// <summary>
+    /// Create a new admin account
+    /// </summary>
+    /// <param name="createDto">Admin data (username, email, password)</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -5,6 +5,9 @@ using src.Core.Interfaces.Services;
 
 namespace src.API.Controllers;
 
+/// <summary>
+/// Customer management endpoints - requires JWT authentication
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
@@ -12,8 +15,12 @@ namespace src.API.Controllers;
 public class CustomersController(ICustomerService customerService, ILogger<CustomersController> logger)
     : ControllerBase
 {
+    /// <summary>
+    /// Get all customers
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<CustomerDto>>> GetAllCustomers()
     {
         logger.LogInformation("Getting all customers");
@@ -21,9 +28,14 @@ public class CustomersController(ICustomerService customerService, ILogger<Custo
         return Ok(customers);
     }
 
+    /// <summary>
+    /// Get customer by ID
+    /// </summary>
+    /// <param name="id">Customer ID</param>
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
     {
         logger.LogInformation("Getting customer with id {Id}", id);
@@ -34,9 +46,14 @@ public class CustomersController(ICustomerService customerService, ILogger<Custo
         return NotFound();
     }
 
+    /// <summary>
+    /// Create a new customer - Admin only
+    /// </summary>
+    /// <param name="customerCreateDto">Customer data</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<CustomerDto>> CreateCustomer(CustomerCreateDto customerCreateDto)
     {
@@ -59,10 +76,16 @@ public class CustomersController(ICustomerService customerService, ILogger<Custo
         }
     }
 
+    /// <summary>
+    /// Update customer - Admin only
+    /// </summary>
+    /// <param name="id">Customer ID</param>
+    /// <param name="customerUpdateDto">Updated customer data</param>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CustomerDto>> UpdateCustomer(int id, CustomerUpdateDto customerUpdateDto)
     {
         if (!ModelState.IsValid)
@@ -85,9 +108,14 @@ public class CustomersController(ICustomerService customerService, ILogger<Custo
         }
     }
 
+    /// <summary>
+    /// Delete customer - Admin only
+    /// </summary>
+    /// <param name="id">Customer ID</param>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
         logger.LogInformation("Deleting customer with id {Id}", id);

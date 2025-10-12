@@ -4,11 +4,18 @@ using src.Core.Interfaces.Services;
 
 namespace src.API.Controllers;
 
+/// <summary>
+/// Authentication endpoints - No authentication required
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
 public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ControllerBase
 {
+    /// <summary>
+    /// Admin login - Returns JWT token for authentication
+    /// </summary>
+    /// <param name="loginDto">Login credentials (username and password)</param>
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

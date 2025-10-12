@@ -5,12 +5,18 @@ using src.Core.Entities;
 
 namespace src.API.Controllers;
 
+/// <summary>
+/// Book management endpoints - No authentication required
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
 public class BooksController(IBookService bookService, ILogger<BooksController> logger)
     : ControllerBase
 {
+    /// <summary>
+    /// Get all books
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookDto>>> GetAllBooks()
@@ -20,6 +26,10 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get book by ID
+    /// </summary>
+    /// <param name="id">Book ID</param>
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,6 +43,12 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         return NotFound();
     }
 
+    /// <summary>
+    /// Search books by title, author, or status
+    /// </summary>
+    /// <param name="title">Filter by book title</param>
+    /// <param name="author">Filter by author name</param>
+    /// <param name="status">Filter by book status (Available/Unavailable)</param>
     [HttpGet("search")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookDto>>> SearchBooks(
@@ -47,6 +63,14 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         return Ok(books);
     }
 
+    /// <summary>
+    /// Create a new book
+    /// </summary>
+    /// <param name="bookCreateDto">Book data</param>
+    /// <remarks>
+    /// ISBN must be unique across all books. Duplicate ISBN will result in a 409 Conflict response.
+    /// Book is created with Available status by default.
+    /// </remarks>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,6 +102,15 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         }
     }
 
+    /// <summary>
+    /// Update book information
+    /// </summary>
+    /// <param name="id">Book ID</param>
+    /// <param name="bookUpdateDto">Updated book data</param>
+    /// <remarks>
+    /// ISBN must remain unique. If the new ISBN already exists for another book, 
+    /// the operation will fail with a 409 Conflict response.
+    /// </remarks>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -110,6 +143,10 @@ public class BooksController(IBookService bookService, ILogger<BooksController> 
         }
     }
 
+    /// <summary>
+    /// Delete book
+    /// </summary>
+    /// <param name="id">Book ID</param>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

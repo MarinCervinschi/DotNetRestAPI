@@ -5,6 +5,9 @@ using src.Core.Interfaces.Services;
 
 namespace src.API.Controllers;
 
+/// <summary>
+/// Reservation management endpoints - requires JWT authentication
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
@@ -12,8 +15,12 @@ namespace src.API.Controllers;
 public class ReservationsController(IReservationService reservationService, ILogger<ReservationsController> logger)
     : ControllerBase
 {
+    /// <summary>
+    /// Get all reservations
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<ReservationDto>>> GetAllReservations()
     {
         logger.LogInformation("Getting all reservations");
@@ -21,9 +28,14 @@ public class ReservationsController(IReservationService reservationService, ILog
         return Ok(reservations);
     }
 
+    /// <summary>
+    /// Get reservation by ID
+    /// </summary>
+    /// <param name="id">Reservation ID</param>
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<ReservationDto>> GetReservation(int id)
     {
         logger.LogInformation("Getting reservation with id {Id}", id);
@@ -34,8 +46,13 @@ public class ReservationsController(IReservationService reservationService, ILog
         return NotFound();
     }
 
+    /// <summary>
+    /// Get all reservations for a specific customer
+    /// </summary>
+    /// <param name="customerId">Customer ID</param>
     [HttpGet("customer/{customerId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservationsByCustomer(int customerId)
     {
         logger.LogInformation("Getting reservations for customer with id {CustomerId}", customerId);
@@ -43,8 +60,13 @@ public class ReservationsController(IReservationService reservationService, ILog
         return Ok(reservations);
     }
 
+    /// <summary>
+    /// Get all reservations for a specific book
+    /// </summary>
+    /// <param name="bookId">Book ID</param>
     [HttpGet("book/{bookId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservationsByBook(int bookId)
     {
         logger.LogInformation("Getting reservations for book with id {BookId}", bookId);
@@ -52,11 +74,21 @@ public class ReservationsController(IReservationService reservationService, ILog
         return Ok(reservations);
     }
 
+    /// <summary>
+    /// Create a new book reservation
+    /// </summary>
+    /// <param name="reservationCreateDto">Reservation data (customer ID and book ID)</param>
+    /// <remarks>
+    /// Creates a reservation with automatic expiration date set to 7 days from creation.
+    /// The book must be available (status = Available) to create the reservation.
+    /// Successfully creating a reservation automatically updates the book status to Unavailable.
+    /// </remarks>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ReservationDto>> CreateReservation(ReservationCreateDto reservationCreateDto)
     {
@@ -95,9 +127,18 @@ public class ReservationsController(IReservationService reservationService, ILog
         }
     }
 
+    /// <summary>
+    /// Delete reservation
+    /// </summary>
+    /// <param name="id">Reservation ID</param>
+    /// <remarks>
+    /// Deleting a reservation automatically updates the associated book status back to Available,
+    /// making it available for new reservations.
+    /// </remarks>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteReservation(int id)
     {
         logger.LogInformation("Deleting reservation with id {Id}", id);
