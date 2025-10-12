@@ -8,6 +8,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Book> Books { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<Admin> Admins { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

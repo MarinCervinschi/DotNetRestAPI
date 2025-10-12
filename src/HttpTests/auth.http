@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:5163
+@token = your_jwt_token_here
+
+### Login Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Create New Admin (requires token)
+POST {{baseUrl}}/admin
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "newadmin",
+  "email": "newadmin@example.com",
+  "password": "password123"
+}
+
+### Get Admin by Username (requires token)
+GET {{baseUrl}}/admin/admin
+Authorization: Bearer {{token}}
+
+### Test Protected Customers Endpoint (requires token)
+GET {{baseUrl}}/customers
+Authorization: Bearer {{token}}
+
+### Test Protected Reservations Endpoint (requires token)
+GET {{baseUrl}}/reservations
+Authorization: Bearer {{token}}
+
+### Test Public Books Endpoint (no token required)
+GET {{baseUrl}}/books

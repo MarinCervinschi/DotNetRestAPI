@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.API.DTOs;
 using src.Core.Interfaces.Services;
@@ -7,6 +8,7 @@ namespace src.API.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class ReservationsController(IReservationService reservationService, ILogger<ReservationsController> logger)
     : ControllerBase
 {

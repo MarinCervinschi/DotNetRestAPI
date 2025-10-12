@@ -6,13 +6,13 @@ namespace src.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class, IEntity
 {
-    private readonly ApplicationDbContext _context;
+    protected readonly ApplicationDbContext Context;
     private readonly DbSet<T> _dbSet;
 
     public Repository(ApplicationDbContext context)
     {
-        _context = context;
-        _dbSet = _context.Set<T>();
+        Context = context;
+        _dbSet = Context.Set<T>();
     }
 
     public async Task<T?> GetByIdAsync(int id)
@@ -28,14 +28,14 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
     public virtual async Task<T> CreateAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return entity;
     }
 
     public virtual async Task<T> UpdateAsync(T entity)
     {
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return entity;
     }
 
@@ -44,7 +44,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         var entity = await _dbSet.FindAsync(id);
         if (entity == null) return false;
         _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return true;
     }
 

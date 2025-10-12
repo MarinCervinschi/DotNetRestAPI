@@ -1,4 +1,5 @@
 using src.API.Configuration;
+using src.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ builder.Services.AddDatabaseConfiguration();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApiServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHealthChecksConfiguration();
 
 var app = builder.Build();
@@ -22,7 +24,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Middleware - ORDER IS IMPORTANT
+app.UseGlobalExceptionHandling();
+app.UseRequestLogging();
+//app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthCheckEndpoints();

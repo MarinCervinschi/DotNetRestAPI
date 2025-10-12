@@ -1,6 +1,30 @@
 # DotNetRestAPI
 
-REST API for library management with .NET 9 and PostgreSQL.
+REST API for library management with .NET 9, PostgreSQL and JWT Authentication.
+
+## Features
+
+- 📚 **Book Management** - CRUD operations for books (public endpoints)
+- 👥 **Customer Management** - CRUD operations for customers (protected)
+- 📋 **Reservation Management** - Book reservation system (protected)
+- 🔐 **JWT Authentication** - Admin authentication with token-based security
+- 🌱 **Database Seeding** - On-demand data population for development
+- 🛡️ **Custom Middleware** - Request logging, error handling, JWT validation
+- 📊 **Health Checks** - Database connectivity monitoring
+- 📖 **Swagger/OpenAPI** - Interactive API documentation
+
+## Authentication
+
+The API uses JWT (JSON Web Tokens) for authentication:
+
+- **Public Endpoints**: `/books/*` - No authentication required
+- **Protected Endpoints**: `/customers/*`, `/reservations/*`, `/admin/*` - JWT token required
+- **Auth Endpoint**: `/auth/login` - Get JWT token
+
+### Default Admin Accounts (after seeding)
+
+- **Username**: `admin` / **Password**: `admin123`
+- **Username**: `superadmin` / **Password**: `super123`
 
 ## Main Commands
 
@@ -13,26 +37,23 @@ dotnet tool install --global dotnet-ef
 # Start PostgreSQL database
 docker-compose up -d postgres
 
-# Apply migrations
-dotnet ef database update
-
-# Start API
+# Start API (creates database automatically)
 dotnet run --project src
 ```
 
-### Database
+### Database Management
 
-To use this scripts ensure you are in the `src` directory:
+To use these commands ensure you are in the `src` directory:
 
 ```bash
 cd src
 ```
 
-then run the following commands:
+#### Migration Commands
 
 ```bash
 # Create new migration
-dotnet ef migrations add <MigrationName> --output-dir src/Infrastructure/Data/Migrations
+dotnet ef migrations add <MigrationName>
 
 # Apply migrations
 dotnet ef database update
@@ -44,96 +65,139 @@ dotnet ef migrations remove
 dotnet ef database drop && dotnet ef database update
 ```
 
-### Database Seeding
+#### Database Seeding
 
-The project includes sample data for development via migrations:
-
-```bash
-# Populate database with sample data
-dotnet ef database update
-
-# Reset database (clean + repopulate)
-dotnet ef database drop --force && dotnet ef database update
-```
-
-**How `update` works:**
-- Applies all pending migrations to the database
-- Executes the `SeedInitialData` migration which inserts sample data
-- If database doesn't exist, creates it automatically
-- If seed data already exists, skips insertion (migrations run only once)
-
-### Testing
+The project includes a sophisticated seeding system for development:
 
 ```bash
-# Run all tests
-dotnet test
+# Populate database with sample data (runs migrations + seeding then exits)
+dotnet run -- --seed
 
-# Run tests with coverage
-dotnet test --collect:"XPlat Code Coverage"
+# Normal app startup (no seeding)
+dotnet run
 ```
 
-## API Endpoints
+**What gets seeded:**
+- 👑 **2 Admin accounts** with hashed passwords
+- 📚 **5 Sample books** (Clean Code, Design Patterns, etc.)
+- 👥 **3 Sample customers** (Mario Rossi, Luigi Bianchi, Anna Verdi)
 
-**Base URL:** `http://localhost:5163/`
+The seeding is **idempotent** - you can run it multiple times safely.
 
-### Books
+## API Usage
 
+### Authentication Flow
+
+1. **Login to get JWT token:**
+```bash
+curl -X POST http://localhost:5000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "admin123"
+  }'
+```
+
+2. **Use token for protected endpoints:**
+```bash
+curl -X GET http://localhost:5000/customers \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Endpoint Overview
+
+#### Public Endpoints
 - `GET /books` - List all books
-- `GET /books/{id}` - Get book details
-- `GET /books/search` - Search books by title, author, and status
-- `POST /books` - Create new book
-- `PUT /books/{id}` - Update book
-- `DELETE /books/{id}` - Delete book
+- `GET /books/{id}` - Get specific book
+- `POST /auth/login` - Admin login
 
-### Customers
-
+#### Protected Endpoints (JWT Required)
 - `GET /customers` - List all customers
-- `GET /customers/{id}` - Get customer details
-- `POST /customers` - Create new customer
-- `PUT /customers/{id}` - Update customer
-- `DELETE /customers/{id}` - Delete customer
-
-### Reservations
-
+- `POST /customers` - Create customer (admin only)
+- `PUT /customers/{id}` - Update customer (admin only)
+- `DELETE /customers/{id}` - Delete customer (admin only)
 - `GET /reservations` - List all reservations
-- `GET /reservations/{id}` - Get reservation details
-- `GET /reservations/customer/{customerId}` - Get reservations by customer
-- `GET /reservations/book/{bookId}` - Get reservations by book
-- `POST /reservations` - Create new reservation
+- `POST /reservations` - Create reservation
 - `DELETE /reservations/{id}` - Delete reservation
 
-### Health & Info
+#### Admin Management (JWT Required)
+- `GET /admin/{username}` - Get admin info
+- `POST /admin` - Create new admin
 
-- `GET /health` - Application status
-- **Swagger UI:** `http://localhost:5000/swagger` (development only)
+## Development
 
-## Technologies
-
-- **.NET 9** - Main framework
-- **PostgreSQL** - Database
-- **Entity Framework Core** - ORM
-- **Docker** - Containerization
-- **xUnit + FluentAssertions + Moq** - Testing
-- **Swagger/OpenAPI** - API documentation
-
-## Project Structure
+### Project Structure
 
 ```
 src/
-├── API/           # Controllers, DTOs, Configuration
-├── Core/          # Entities, Services, Interfaces
-└── Infrastructure/ # Data Access, Repositories
-
-tests/
-└── src.UnitTests/ # Unit Tests with Builders
+├── API/
+│   ├── Controllers/        # REST controllers
+│   ├── DTOs/              # Data transfer objects
+│   ├── Configuration/     # App configuration
+│   └── Middleware/        # Custom middleware
+├── Core/
+│   ├── Entities/          # Domain models
+│   ├── Interfaces/        # Service/repository contracts
+│   └── Services/          # Business logic
+├── Infrastructure/
+│   ├── Data/              # EF Core context & configurations
+│   │   └── Seeding/       # Database seeding system
+│   └── Repositories/      # Data access layer
+└── HttpTests/             # HTTP test files
 ```
 
-## Features
+### Custom Middleware
 
-- **Complete CRUD** for Books, Customers, Reservations
-- **Automatic input validation** with Data Annotations
-- **Health checks** for database
-- **Structured logging**
-- **Background service** for expired reservations management
-- **Clean Architecture** with layer separation
-- **Complete unit tests** with 90%+ coverage
+The API includes several custom middleware for enhanced functionality:
+
+- **Global Exception Handling** - Catches all errors and returns consistent JSON responses
+- **Request Logging** - Logs all HTTP requests with timing information  
+- **JWT Validation** - Additional JWT token logging and validation
+- **Route-Specific Middleware** - Custom logic for specific API routes
+
+### Configuration
+
+JWT settings in `appsettings.json`:
+
+```json
+{
+  "Jwt": {
+    "Key": "your-secret-key-here-minimum-256-bits-long",
+    "Issuer": "DotNetRestAPI",
+    "Audience": "DotNetRestAPI-Users", 
+    "ExpiryInMinutes": 60
+  }
+}
+```
+
+### Testing
+
+Use the provided HTTP test files in `/HttpTests/`:
+
+- `auth.http` - Authentication endpoints
+- `books.http` - Book management  
+- `customers.http` - Customer management
+- `reservations.http` - Reservation management
+
+## Health Checks
+
+Monitor API health at:
+- `/health` - Overall health status
+- `/health/db` - Database connectivity
+- `/health/api` - API responsiveness
+
+## Documentation
+
+- **Swagger UI**: Available at `/swagger` in development mode
+- **OpenAPI**: Available at `/openapi/v1.json`
+
+## Technologies
+
+- **.NET 9** - Latest .NET framework
+- **ASP.NET Core** - Web API framework
+- **Entity Framework Core** - ORM for PostgreSQL
+- **PostgreSQL** - Primary database
+- **JWT Bearer** - Authentication
+- **BCrypt** - Password hashing
+- **Swagger/OpenAPI** - API documentation
+- **Docker Compose** - Database containerization
