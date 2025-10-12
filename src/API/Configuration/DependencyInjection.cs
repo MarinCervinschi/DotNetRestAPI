@@ -5,6 +5,7 @@ using src.Core.Interfaces;
 using src.Core.Interfaces.Repositories;
 using src.Core.Interfaces.Services;
 using src.Core.Services;
+using src.Infrastructure.Data.Seeding;
 using src.Infrastructure.Repositories;
 
 namespace src.API.Configuration;
@@ -14,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        
+
         services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
 
@@ -31,7 +32,9 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        // Here you can add infrastructure related services, like DbContext, etc.
+        services.AddScoped<IDataSeeder, DataSeeder>();
+        services.AddHostedService<SeedCommand>();
+
         return services;
     }
 
@@ -46,7 +49,8 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtConfig = new JwtConfig();
         configuration.GetSection("Jwt").Bind(jwtConfig);

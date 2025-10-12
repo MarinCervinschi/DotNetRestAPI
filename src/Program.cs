@@ -1,6 +1,5 @@
 using src.API.Configuration;
 using src.API.Middleware;
-using src.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +15,6 @@ var app = builder.Build();
 if (!app.Environment.IsEnvironment("Testing"))
 {
     await app.Services.EnsureDatabaseCreated();
-
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    await DbInitializer.SeedAsync(context);
 }
 
 if (app.Environment.IsDevelopment())
