@@ -14,5 +14,8 @@ public class Admin : IEntity
     [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
-    [Required] public string PasswordHash { get; set; } = string.Empty;
+    [Required]
+    [MinLength(6)]
+    [MaxLength(255)]
+    public string PasswordHash { get; set; } = string.Empty;
 }

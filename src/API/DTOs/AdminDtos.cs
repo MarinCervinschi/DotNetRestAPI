@@ -11,21 +11,31 @@ public class AdminDto
 
 public class AdminLoginDto
 {
-    [Required] public string Username { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Username is required")]
+    [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters")]
+    public string Username { get; set; } = string.Empty;
 
-    [Required] public string Password { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Password is required")]
+    [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
+    [MaxLength(255, ErrorMessage = "Password cannot exceed 255 characters")]
+    public string Password { get; set; } = string.Empty;
 }
 
 public class AdminCreateDto
 {
-    [Required] [MaxLength(50)] public string Username { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Username is required")]
+    [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters")]
+    public string Username { get; set; } = string.Empty;
 
-    [Required]
-    [EmailAddress]
-    [MaxLength(255)]
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Please enter a valid email address")]
+    [MaxLength(255, ErrorMessage = "Email cannot exceed 255 characters")]
     public string Email { get; set; } = string.Empty;
 
-    [Required] [MinLength(6)] public string Password { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Password is required")]
+    [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
+    [MaxLength(255, ErrorMessage = "Password cannot exceed 255 characters")]
+    public string Password { get; set; } = string.Empty;
 }
 
 public class LoginResponseDto
