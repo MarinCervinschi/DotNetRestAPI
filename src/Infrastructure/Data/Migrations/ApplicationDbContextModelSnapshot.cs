@@ -37,7 +37,8 @@ namespace src.Infrastructure.Data.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Username")
                         .IsRequired()

@@ -12,7 +12,7 @@ using src.Infrastructure.Data;
 namespace src.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251012085603_AddAdminEntity")]
+    [Migration("20251012104054_AddAdminEntity")]
     partial class AddAdminEntity
     {
         /// <inheritdoc />
@@ -40,7 +40,8 @@ namespace src.Infrastructure.Data.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Username")
                         .IsRequired()
