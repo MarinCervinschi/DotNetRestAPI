@@ -25,7 +25,6 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <Folder Include="API\Middleware\" />
         <Folder Include="Infrastructure\Data\Migrations\" />
     </ItemGroup>
 
