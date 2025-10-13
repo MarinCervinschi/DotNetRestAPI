@@ -18,10 +18,9 @@ jobs:
     services:
       postgres:
         image: postgres:16
-        env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
+        env_file:
+          - .env.example:
+
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -56,8 +55,9 @@ jobs:
 
       - name: Run integration tests
         run: dotnet test tests/src.IntegrationTests/src.IntegrationTests.csproj --no-build --configuration Release --verbosity normal
-        env:
-          ConnectionStrings__DefaultConnection: "Server=localhost;Database=test_db;User Id=test_user;Password=test_password;"
+        env_file:
+          - .env.example
+
 
   docker-verification:
     name: Docker Build Verification
@@ -83,13 +83,9 @@ jobs:
 
       - name: Create test environment file
         run: |
-          echo "POSTGRES_DB=test_db" > .env
-          echo "POSTGRES_USER=test_user" > .env
-          echo "POSTGRES_PASSWORD=test_password" >> .env
+          cp .env.example .env
+
           echo "DB_HOST=postgres" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "ASPNETCORE_ENVIRONMENT=Development" >> .env
-          echo "ASPNETCORE_URLS=http://+:8080" >> .env
 
       - name: Test Docker Compose configuration
         run: |
