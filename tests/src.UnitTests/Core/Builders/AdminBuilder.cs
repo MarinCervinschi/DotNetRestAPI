@@ -5,10 +5,18 @@ namespace src.UnitTests.Core.Builders;
 
 public class AdminBuilder
 {
-    private int _id = 1;
+    private static int _nextId = 1;
+    private int _id;
     private string _username = "admin";
     private string _email = "admin@example.com";
     private string _passwordHash = "$2a$11$abcdefghijklmnopqrstuvwxyz123456789";
+
+    public AdminBuilder()
+    {
+        _id = Interlocked.Increment(ref _nextId);
+        _username = $"admin{_id}";
+        _email = $"admin{_id}@example.com";
+    }
 
     public static AdminBuilder New() => new();
 
