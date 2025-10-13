@@ -11,20 +11,20 @@ namespace src.IntegrationTests.Base;
 
 public abstract class IntegrationTestBase : IAsyncLifetime
 {
-    private readonly TestWebApplicationFactory _factory;
+    protected readonly TestWebApplicationFactory Factory;
     protected readonly HttpClient HttpClient;
     protected readonly AuthenticationHelper AuthHelper;
 
     protected IntegrationTestBase()
     {
-        _factory = new TestWebApplicationFactory();
-        HttpClient = _factory.CreateClient();
+        Factory = new TestWebApplicationFactory();
+        HttpClient = Factory.CreateClient();
         AuthHelper = new AuthenticationHelper();
     }
 
     protected async Task<ApplicationDbContext> GetDbContextAsync()
     {
-        return await _factory.GetDbContextAsync();
+        return await Factory.GetDbContextAsync();
     }
 
     protected void SetAuthenticationHeader(int adminId = 1, string username = "testadmin")
@@ -50,12 +50,16 @@ public abstract class IntegrationTestBase : IAsyncLifetime
 
     public virtual async Task InitializeAsync()
     {
-        await _factory.CleanupDatabaseAsync();
+        await Factory.CleanupDatabaseAsync();
+
+        using var scope = Factory.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync();
     }
 
     public virtual async Task DisposeAsync()
     {
         HttpClient.Dispose();
-        await _factory.DisposeAsync();
+        await Factory.DisposeAsync();
     }
 }
