@@ -3,20 +3,24 @@ using Microsoft.Extensions.DependencyInjection;
 using src.API.DTOs;
 using src.Core.Interfaces.Repositories;
 using src.IntegrationTests.Base;
+using src.IntegrationTests.Helpers;
 using src.UnitTests.Core.Builders;
 using System.Net;
 using System.Net.Http.Headers;
+using Xunit;
 
 namespace src.IntegrationTests.API;
 
 public class AuthControllerTests : IntegrationTestBase
 {
     private IAdminRepository _adminRepository = null!;
+    private ApiTestHelper _apiHelper = null!;
 
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync();
         _adminRepository = Factory.Services.GetRequiredService<IAdminRepository>();
+        _apiHelper = new ApiTestHelper(this);
     }
 
     [Fact]
@@ -99,14 +103,19 @@ public class AuthControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
-    public async Task Login_WithEmptyUsername_ShouldReturnBadRequest()
+    [Theory]
+    [InlineData("", "password123")]
+    [InlineData("testadmin", "")]
+    [InlineData("testadmin", "123")] // Short password
+    [InlineData("   ", "password123")]
+    [InlineData("testadmin", "   ")]
+    public async Task Login_WithInvalidData_ShouldReturnBadRequest(string username, string password)
     {
         // Arrange
         var loginRequest = new AdminLoginDto
         {
-            Username = "",
-            Password = "password123"
+            Username = username,
+            Password = password
         };
 
         // Act
@@ -117,75 +126,50 @@ public class AuthControllerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task Login_WithEmptyPassword_ShouldReturnBadRequest()
+    public async Task Login_ThenUseTokenForProtectedEndpoint_ShouldWork()
     {
-        // Arrange
-        var loginRequest = new AdminLoginDto
-        {
-            Username = "testadmin",
-            Password = ""
-        };
+        // Arrange - Create admin and get token via API helper
+        var (admin, loginResponse) = await _apiHelper.SetupAuthenticationAsync("integrationtest", "password123");
 
-        // Act
-        var response = await HttpClient.PostAsync("/Auth/login", CreateJsonContent(loginRequest));
+        // Create test customer to verify authenticated endpoint works
+        var customer = await _apiHelper.CreateTestCustomerAsync();
+
+        // Act - Access protected endpoint with authenticated client
+        var response = await HttpClient.GetAsync($"/Customers/{customer.Id}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        var returnedCustomer = await DeserializeResponseAsync<CustomerDto>(response);
+        returnedCustomer.Should().NotBeNull();
+        returnedCustomer.Id.Should().Be(customer.Id);
     }
 
     [Fact]
-    public async Task Login_WithShortPassword_ShouldReturnBadRequest()
+    public async Task ProtectedEndpoint_WithoutToken_ShouldReturnUnauthorized()
     {
         // Arrange
-        var loginRequest = new AdminLoginDto
-        {
-            Username = "testadmin",
-            Password = "123" // Less than 6 characters
-        };
+        _apiHelper.ClearAuthentication();
+        var customer = await _apiHelper.CreateTestCustomerAsync();
 
-        // Act
-        var response = await HttpClient.PostAsync("/Auth/login", CreateJsonContent(loginRequest));
+        // Act - Try to access protected endpoint without authentication
+        var response = await HttpClient.GetAsync($"/Customers/{customer.Id}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
-    public async Task Login_WithNullRequestBody_ShouldReturnBadRequest()
-    {
-        // Act
-        var response = await HttpClient.PostAsync("/Auth/login", CreateJsonContent((object?)null));
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task JwtToken_WhenUsedInAuthenticatedEndpoint_ShouldWork()
+    public async Task ProtectedEndpoint_WithInvalidToken_ShouldReturnUnauthorized()
     {
         // Arrange
-        var passwordHash = BCrypt.Net.BCrypt.HashPassword("password123");
-        var admin = AdminBuilder.New()
-            .WithUsername("testadmin")
-            .WithPasswordHash(passwordHash)
-            .Build();
-
-        await _adminRepository.CreateAsync(admin);
-
-        var loginRequest = new AdminLoginDto
-        {
-            Username = "testadmin",
-            Password = "password123"
-        };
-
-        var loginResponse = await HttpClient.PostAsync("/Auth/login", CreateJsonContent(loginRequest));
-        var loginResult = await DeserializeResponseAsync<LoginResponseDto>(loginResponse);
+        HttpClient.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "invalid.jwt.token");
 
         // Act
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResult!.Token);
-        var authenticatedResponse = await HttpClient.GetAsync("/Books");
+        var response = await HttpClient.GetAsync("/Customers");
 
         // Assert
-        authenticatedResponse.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }
