@@ -99,28 +99,28 @@ public class ReservationExpirationService(
 
                 break;
 
-            /*case ExpirationHandlingStrategy.DeleteReservation:
-                logger.LogInformation("Deleting expired reservation {ReservationId} for book {BookId}",
-                    reservation.Id, reservation.BookId);
-
-                var deleted = await reservationRepository.DeleteReservationWithBookUpdateAsync(reservation.Id);
-
-                if (deleted)
-                {
-                    logger.LogInformation(
-                        "Successfully deleted expired reservation {ReservationId} and restored book {BookId} availability",
+                /*case ExpirationHandlingStrategy.DeleteReservation:
+                    logger.LogInformation("Deleting expired reservation {ReservationId} for book {BookId}",
                         reservation.Id, reservation.BookId);
-                }
-                else
-                {
-                    logger.LogWarning("Failed to delete expired reservation {ReservationId}", reservation.Id);
-                }
 
-                break;
+                    var deleted = await reservationRepository.DeleteReservationWithBookUpdateAsync(reservation.Id);
 
-            default:
-                logger.LogWarning("Unknown expiration handling strategy: {Strategy}", Strategy);
-                break;*/
+                    if (deleted)
+                    {
+                        logger.LogInformation(
+                            "Successfully deleted expired reservation {ReservationId} and restored book {BookId} availability",
+                            reservation.Id, reservation.BookId);
+                    }
+                    else
+                    {
+                        logger.LogWarning("Failed to delete expired reservation {ReservationId}", reservation.Id);
+                    }
+
+                    break;
+
+                default:
+                    logger.LogWarning("Unknown expiration handling strategy: {Strategy}", Strategy);
+                    break;*/
         }
     }
 }

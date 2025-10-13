@@ -39,7 +39,7 @@ public class ReservationServiceTests
             .Build();
 
         var customerDto = new CustomerDto
-            { Id = 1, FirstName = "Test", LastName = "Customer", Email = "test@example.com" };
+        { Id = 1, FirstName = "Test", LastName = "Customer", Email = "test@example.com" };
         var bookDto = new BookDto { Id = 1, Title = "Test Book", Author = "Test Author", ISBN = "1234567890" };
 
         _mockReservationRepository.Setup(r => r.GetByIdAsync(reservationId))
@@ -99,9 +99,9 @@ public class ReservationServiceTests
         };
 
         var customerDto1 = new CustomerDto
-            { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
+        { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
         var customerDto2 = new CustomerDto
-            { Id = 2, FirstName = "Customer", LastName = "Two", Email = "customer2@example.com" };
+        { Id = 2, FirstName = "Customer", LastName = "Two", Email = "customer2@example.com" };
         var bookDto1 = new BookDto { Id = 1, Title = "Book 1", Author = "Author 1", ISBN = "1111111111" };
         var bookDto2 = new BookDto { Id = 2, Title = "Book 2", Author = "Author 2", ISBN = "2222222222" };
         var bookDto3 = new BookDto { Id = 3, Title = "Book 3", Author = "Author 3", ISBN = "3333333333" };
@@ -156,7 +156,7 @@ public class ReservationServiceTests
         };
 
         var customerDto = new CustomerDto
-            { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
+        { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
         var bookDto1 = new BookDto { Id = 1, Title = "Book 1", Author = "Author 1", ISBN = "1111111111" };
         var bookDto3 = new BookDto { Id = 3, Title = "Book 3", Author = "Author 3", ISBN = "3333333333" };
 
@@ -192,9 +192,9 @@ public class ReservationServiceTests
         };
 
         var customerDto1 = new CustomerDto
-            { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
+        { Id = 1, FirstName = "Customer", LastName = "One", Email = "customer1@example.com" };
         var customerDto3 = new CustomerDto
-            { Id = 3, FirstName = "Customer", LastName = "Three", Email = "customer3@example.com" };
+        { Id = 3, FirstName = "Customer", LastName = "Three", Email = "customer3@example.com" };
         var bookDto = new BookDto { Id = 1, Title = "Book 1", Author = "Author 1", ISBN = "1111111111" };
 
         _mockReservationRepository.Setup(r => r.GetAllAsync())
@@ -232,7 +232,7 @@ public class ReservationServiceTests
             .Build();
 
         var customerDto = new CustomerDto
-            { Id = 1, FirstName = "Test", LastName = "Customer", Email = "test@example.com" };
+        { Id = 1, FirstName = "Test", LastName = "Customer", Email = "test@example.com" };
         var bookDto = new BookDto { Id = 1, Title = "Test Book", Author = "Test Author", ISBN = "1234567890" };
 
         _mockCustomerService.Setup(s => s.CustomerExistsAsync(1))

@@ -3,7 +3,7 @@ using src.Core.Interfaces;
 
 namespace src.Core.Entities;
 
-public class Reservation: IEntity
+public class Reservation : IEntity
 {
     public int Id { get; set; }
 

@@ -61,7 +61,7 @@ public class AuthService(IAdminRepository adminRepository, IOptions<JwtConfig> j
     {
         if (string.IsNullOrEmpty(passwordHash))
             return false;
-            
+
         return BCrypt.Net.BCrypt.Verify(password, passwordHash);
     }
 }

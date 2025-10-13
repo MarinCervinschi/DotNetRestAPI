@@ -50,7 +50,7 @@ public class CustomerRepositoryTests : IntegrationTestBase
         var customer1 = CustomerBuilder.New().WithFirstName("Customer").WithLastName("One").WithEmail("customer1@test.com").Build();
         var customer2 = CustomerBuilder.New().WithFirstName("Customer").WithLastName("Two").WithEmail("customer2@test.com").Build();
         var customer3 = CustomerBuilder.New().WithFirstName("Customer").WithLastName("Three").WithEmail("customer3@test.com").Build();
-        
+
         await _customerRepository.CreateAsync(customer1);
         await _customerRepository.CreateAsync(customer2);
         await _customerRepository.CreateAsync(customer3);
@@ -75,7 +75,7 @@ public class CustomerRepositoryTests : IntegrationTestBase
             .WithLastName("Name")
             .WithEmail("original@test.com")
             .Build();
-        
+
         var createdCustomer = await _customerRepository.CreateAsync(customer);
         createdCustomer.FirstName = "Updated";
         createdCustomer.LastName = "Name";
@@ -102,7 +102,7 @@ public class CustomerRepositoryTests : IntegrationTestBase
             .WithLastName("ToDelete")
             .WithEmail("todelete@test.com")
             .Build();
-        
+
         var createdCustomer = await _customerRepository.CreateAsync(customer);
 
         // Act
@@ -159,7 +159,7 @@ public class CustomerRepositoryTests : IntegrationTestBase
             .WithLastName("Customer")
             .WithEmail("specific@test.com")
             .Build();
-        
+
         var createdCustomer = await _customerRepository.CreateAsync(customer);
 
         // Act

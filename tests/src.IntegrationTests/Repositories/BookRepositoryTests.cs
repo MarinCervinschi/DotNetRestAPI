@@ -52,7 +52,7 @@ public class BookRepositoryTests : IntegrationTestBase
         var book1 = BookBuilder.New().WithTitle("Book 1").WithIsbn("1111111111111").Build();
         var book2 = BookBuilder.New().WithTitle("Book 2").WithIsbn("2222222222222").Build();
         var book3 = BookBuilder.New().WithTitle("Book 3").WithIsbn("3333333333333").Build();
-        
+
         await _bookRepository.CreateAsync(book1);
         await _bookRepository.CreateAsync(book2);
         await _bookRepository.CreateAsync(book3);
@@ -78,7 +78,7 @@ public class BookRepositoryTests : IntegrationTestBase
             .WithIsbn("9999999999999")
             .WithAvailableStatus()
             .Build();
-        
+
         var createdBook = await _bookRepository.CreateAsync(book);
         createdBook.Title = "Updated Title";
         createdBook.Status = BookStatus.Unavailable;
@@ -104,7 +104,7 @@ public class BookRepositoryTests : IntegrationTestBase
             .WithTitle("Book to Delete")
             .WithIsbn("0000000000000")
             .Build();
-        
+
         var createdBook = await _bookRepository.CreateAsync(book);
 
         // Act
@@ -161,7 +161,7 @@ public class BookRepositoryTests : IntegrationTestBase
             .WithAuthor("Specific Author")
             .WithIsbn("7777777777777")
             .Build();
-        
+
         var createdBook = await _bookRepository.CreateAsync(book);
 
         // Act
