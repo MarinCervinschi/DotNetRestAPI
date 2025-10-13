@@ -18,8 +18,10 @@ jobs:
     services:
       postgres:
         image: postgres:16
-        env_file:
-          - .env.example
+        environment:
+          POSTGRES_DB: dotnetrestapi
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
 
         options: >-
           --health-cmd pg_isready
