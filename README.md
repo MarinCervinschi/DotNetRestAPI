@@ -151,7 +151,7 @@ src/
 The API includes several custom middleware for enhanced functionality:
 
 - **Global Exception Handling** - Catches all errors and returns consistent JSON responses
-- **Request Logging** - Logs all HTTP requests with timing information  
+- **Request Logging** - Logs all HTTP requests with timing information
 - **JWT Validation** - Additional JWT token logging and validation
 - **Route-Specific Middleware** - Custom logic for specific API routes
 
@@ -164,7 +164,7 @@ JWT settings in `appsettings.json`:
   "Jwt": {
     "Key": "your-secret-key-here-minimum-256-bits-long",
     "Issuer": "DotNetRestAPI",
-    "Audience": "DotNetRestAPI-Users", 
+    "Audience": "DotNetRestAPI-Users",
     "ExpiryInMinutes": 60
   }
 }
@@ -172,12 +172,35 @@ JWT settings in `appsettings.json`:
 
 ### Testing
 
-Use the provided HTTP test files in `/HttpTests/`:
+The project implements comprehensive testing with both **Unit Tests** and **Integration Tests**.
 
+**Test Structure:**
+- `tests/src.UnitTests/` - Fast, isolated component tests
+- `tests/src.IntegrationTests/` - End-to-end API tests
+
+**Run Tests:**
+```bash
+# All tests
+dotnet test
+
+# Unit tests only
+dotnet test tests/src.UnitTests
+
+# Integration tests only
+dotnet test tests/src.IntegrationTests
+
+# With coverage
+dotnet test --collect:"XPlat Code Coverage"
+```
+
+**HTTP Testing:**
+Use the provided HTTP test files in `/HttpTests/`:
 - `auth.http` - Authentication endpoints
-- `books.http` - Book management  
+- `books.http` - Book management
 - `customers.http` - Customer management
 - `reservations.http` - Reservation management
+
+For detailed test documentation, see [tests/README.md](tests/README.md).
 
 ## Health Checks
 
