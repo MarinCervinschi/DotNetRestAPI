@@ -1,5 +1,16 @@
 # DotNetRestAPI
 
+[![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat&logo=dotnet)](https://dotnet.microsoft.com/)
+[![C#](https://img.shields.io/badge/C%23-12.0-239120?style=flat&logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-9.0-512BD4?style=flat&logo=dotnet)](https://docs.microsoft.com/en-us/aspnet/core/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Entity Framework](https://img.shields.io/badge/Entity%20Framework-9.0-512BD4?style=flat&logo=microsoft)](https://docs.microsoft.com/en-us/ef/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=flat&logo=jsonwebtokens)](https://jwt.io/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=flat&logo=swagger&logoColor=black)](https://swagger.io/)
+[![xUnit](https://img.shields.io/badge/Tests-xUnit-512BD4?style=flat&logo=dotnet)](https://xunit.net/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
+
 REST API for library management with .NET 9, PostgreSQL and JWT Authentication.
 
 ## Features
