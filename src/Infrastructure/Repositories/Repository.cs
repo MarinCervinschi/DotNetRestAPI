@@ -43,6 +43,13 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
     {
         var entity = await _dbSet.FindAsync(id);
         if (entity == null) return false;
+
+        var entry = Context.Entry(entity);
+        if (entry.State == EntityState.Detached)
+        {
+            _dbSet.Attach(entity);
+        }
+
         _dbSet.Remove(entity);
         await Context.SaveChangesAsync();
         return true;
