@@ -527,7 +527,7 @@ public class BookServiceTests
         var searchTitle = "Great";
         var searchAuthor = "Fitzgerald";
         var searchStatus = BookStatus.Available;
-        
+
         var books = new List<Book>
         {
             BookBuilder.New().WithId(1).WithTitle("The Great Gatsby").WithAuthor("F. Scott Fitzgerald").WithAvailableStatus().Build(),

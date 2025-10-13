@@ -5,13 +5,19 @@ namespace src.UnitTests.Core.Builders;
 
 public class ReservationBuilder
 {
-    private int _id = 1;
+    private static int _nextId = 1;
+    private int _id;
     private int _customerId = 1;
     private int _bookId = 1;
     private DateTime _reservationDate = DateTime.UtcNow;
     private DateTime _expirationDate = DateTime.UtcNow.AddDays(7);
-    private CustomerDto? _customer;
-    private BookDto? _book;
+
+    public ReservationBuilder()
+    {
+        _id = Interlocked.Increment(ref _nextId);
+    }
+
+    public static ReservationBuilder New() => new();
 
     public ReservationBuilder WithId(int id)
     {
@@ -43,30 +49,6 @@ public class ReservationBuilder
         return this;
     }
 
-    public ReservationBuilder WithCustomer(CustomerDto customer)
-    {
-        _customer = customer;
-        return this;
-    }
-
-    public ReservationBuilder WithBook(BookDto book)
-    {
-        _book = book;
-        return this;
-    }
-
-    public ReservationBuilder WithExpiredDate()
-    {
-        _expirationDate = DateTime.UtcNow.AddDays(-1);
-        return this;
-    }
-
-    public ReservationBuilder WithFutureExpiration(int days)
-    {
-        _expirationDate = DateTime.UtcNow.AddDays(days);
-        return this;
-    }
-
     public Reservation Build()
     {
         return new Reservation
@@ -87,9 +69,7 @@ public class ReservationBuilder
             CustomerId = _customerId,
             BookId = _bookId,
             ReservationDate = _reservationDate,
-            ExpirationDate = _expirationDate,
-            Customer = _customer,
-            Book = _book
+            ExpirationDate = _expirationDate
         };
     }
 
@@ -101,28 +81,4 @@ public class ReservationBuilder
             BookId = _bookId
         };
     }
-
-    public static ReservationBuilder New() => new();
-
-    public static ReservationBuilder AReservation() => new();
-
-    public static ReservationBuilder AReservationForCustomer(int customerId) => 
-        new ReservationBuilder().WithCustomerId(customerId);
-
-    public static ReservationBuilder AReservationForBook(int bookId) => 
-        new ReservationBuilder().WithBookId(bookId);
-
-    public static ReservationBuilder AnExpiredReservation() => 
-        new ReservationBuilder().WithExpiredDate();
-
-    public static ReservationBuilder AValidReservation() => new ReservationBuilder()
-        .WithCustomerId(1)
-        .WithBookId(1)
-        .WithReservationDate(DateTime.UtcNow)
-        .WithFutureExpiration(14);
-
-    public static ReservationBuilder AReservationWithCustomerAndBook(int customerId, int bookId) => 
-        new ReservationBuilder()
-            .WithCustomerId(customerId)
-            .WithBookId(bookId);
 }

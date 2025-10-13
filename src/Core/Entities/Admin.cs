@@ -7,7 +7,7 @@ public class Admin : IEntity
 {
     public int Id { get; set; }
 
-    [Required] [MaxLength(50)] public string Username { get; set; } = string.Empty;
+    [Required][MaxLength(50)] public string Username { get; set; } = string.Empty;
 
     [Required]
     [EmailAddress]

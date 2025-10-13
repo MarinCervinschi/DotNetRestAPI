@@ -1,49 +1,79 @@
+using src.API.DTOs;
 using src.Core.Entities;
 
 namespace src.UnitTests.Core.Builders;
 
 public class CustomerBuilder
 {
-    private readonly Customer _customer = new()
+    private static int _nextId = 1;
+    private int _id;
+    private string _firstName = "John";
+    private string _lastName = "Doe";
+    private string _email = "john.doe@example.com";
+
+    public CustomerBuilder()
     {
-        Id = 1,
-        FirstName = "John",
-        LastName = "Doe",
-        Email = "john.doe@example.com",
-        Reservations = new List<Reservation>()
-    };
+        _id = Interlocked.Increment(ref _nextId);
+        _email = $"customer{_id}@example.com"; // Make email unique too
+    }
+
+    public static CustomerBuilder New() => new();
+
+    public static CustomerBuilder Default() => new();
 
     public CustomerBuilder WithId(int id)
     {
-        _customer.Id = id;
+        _id = id;
         return this;
     }
 
     public CustomerBuilder WithFirstName(string firstName)
     {
-        _customer.FirstName = firstName;
+        _firstName = firstName;
         return this;
     }
 
     public CustomerBuilder WithLastName(string lastName)
     {
-        _customer.LastName = lastName;
+        _lastName = lastName;
         return this;
     }
 
     public CustomerBuilder WithEmail(string email)
     {
-        _customer.Email = email;
+        _email = email;
         return this;
     }
 
-    public CustomerBuilder WithReservations(List<Reservation> reservations)
+    public Customer Build()
     {
-        _customer.Reservations = reservations;
-        return this;
+        return new Customer
+        {
+            Id = _id,
+            FirstName = _firstName,
+            LastName = _lastName,
+            Email = _email
+        };
     }
 
-    public Customer Build() => _customer;
+    public CustomerDto BuildDto()
+    {
+        return new CustomerDto
+        {
+            Id = _id,
+            FirstName = _firstName,
+            LastName = _lastName,
+            Email = _email
+        };
+    }
 
-    public static CustomerBuilder Default() => new CustomerBuilder();
+    public CustomerCreateDto BuildCreateDto()
+    {
+        return new CustomerCreateDto
+        {
+            FirstName = _firstName,
+            LastName = _lastName,
+            Email = _email
+        };
+    }
 }

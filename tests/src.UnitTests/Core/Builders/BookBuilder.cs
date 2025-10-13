@@ -5,11 +5,19 @@ namespace src.UnitTests.Core.Builders;
 
 public class BookBuilder
 {
-    private int _id = 1;
+    private static int _nextId = 1;
+    private int _id;
     private string _title = "Default Title";
     private string _author = "Default Author";
     private string _isbn = "1234567890";
     private BookStatus _status = BookStatus.Available;
+
+    public BookBuilder()
+    {
+        _id = Interlocked.Increment(ref _nextId);
+        _isbn = $"123456789{_id:D4}"; // Make ISBN unique
+        _title = $"Book {_id}";
+    }
 
     public BookBuilder WithId(int id)
     {
