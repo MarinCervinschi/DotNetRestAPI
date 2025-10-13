@@ -5,30 +5,29 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-      <UserSecretsId>68860735-d41e-44a8-9ce2-a931f7d1c7bc</UserSecretsId>
+        <UserSecretsId>68860735-d41e-44a8-9ce2-a931f7d1c7bc</UserSecretsId>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
-  </PropertyGroup>
+    </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
-        <PackageReference Include="DotNetEnv" Version="3.1.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0"/>
+        <PackageReference Include="DotNetEnv" Version="3.1.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1"/>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <Content Include=".agent\styleGuide.md" />
-        <Folder Include="Infrastructure\Data\Migrations\" />
+        <Folder Include="Infrastructure\Data\Migrations\"/>
     </ItemGroup>
 
 </Project>
