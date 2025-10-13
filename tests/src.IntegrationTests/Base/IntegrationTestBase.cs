@@ -5,7 +5,6 @@ using src.IntegrationTests.Helpers;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Xunit;
 
 namespace src.IntegrationTests.Base;
 

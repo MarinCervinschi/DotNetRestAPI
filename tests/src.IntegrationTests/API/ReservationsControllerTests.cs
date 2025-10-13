@@ -4,7 +4,6 @@ using src.Core.Entities;
 using src.IntegrationTests.Base;
 using src.IntegrationTests.Helpers;
 using System.Net;
-using Xunit;
 
 namespace src.IntegrationTests.API;
 

@@ -6,8 +6,6 @@ using src.IntegrationTests.Base;
 using src.IntegrationTests.Helpers;
 using src.UnitTests.Core.Builders;
 using System.Net;
-using System.Net.Http.Headers;
-using Xunit;
 
 namespace src.IntegrationTests.API;
 
@@ -47,7 +45,7 @@ public class AuthControllerTests : IntegrationTestBase
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         var loginResponse = await DeserializeResponseAsync<LoginResponseDto>(response);
         loginResponse.Should().NotBeNull();
         loginResponse!.Token.Should().NotBeNullOrEmpty();
@@ -139,7 +137,7 @@ public class AuthControllerTests : IntegrationTestBase
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         var returnedCustomer = await DeserializeResponseAsync<CustomerDto>(response);
         returnedCustomer.Should().NotBeNull();
         returnedCustomer.Id.Should().Be(customer.Id);
@@ -163,7 +161,7 @@ public class AuthControllerTests : IntegrationTestBase
     public async Task ProtectedEndpoint_WithInvalidToken_ShouldReturnUnauthorized()
     {
         // Arrange
-        HttpClient.DefaultRequestHeaders.Authorization = 
+        HttpClient.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "invalid.jwt.token");
 
         // Act

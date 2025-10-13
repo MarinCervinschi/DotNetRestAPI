@@ -1,7 +1,6 @@
 using FluentAssertions;
 using src.IntegrationTests.Base;
 using System.Net;
-using Xunit;
 
 namespace src.IntegrationTests.Infrastructure;
 
@@ -24,7 +23,7 @@ public class InfrastructureTests : IntegrationTestBase
     {
         // Act
         await using var context = await GetDbContextAsync();
-        
+
         // Assert
         context.Should().NotBeNull();
         context.Database.Should().NotBeNull();
@@ -35,7 +34,7 @@ public class InfrastructureTests : IntegrationTestBase
     {
         // Act
         var token = AuthHelper.GenerateJwtToken(1, "testuser");
-        
+
         // Assert
         token.Should().NotBeNullOrEmpty();
         token.Split('.').Should().HaveCount(3); // JWT has 3 parts separated by dots
@@ -46,7 +45,7 @@ public class InfrastructureTests : IntegrationTestBase
     {
         // Act
         var headers = AuthHelper.GetAuthHeaders(1, "testuser");
-        
+
         // Assert
         headers.Should().ContainKey("Authorization");
         headers["Authorization"].Should().StartWith("Bearer ");

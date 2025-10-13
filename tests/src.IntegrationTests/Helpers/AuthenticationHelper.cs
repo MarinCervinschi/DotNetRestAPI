@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using src.API.Configuration;
 using src.Core.Services;
-using src.Core.Entities;
 
 namespace src.IntegrationTests.Helpers;
 
