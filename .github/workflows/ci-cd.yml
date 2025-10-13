@@ -57,8 +57,11 @@ jobs:
 
       - name: Run integration tests
         run: dotnet test tests/src.IntegrationTests/src.IntegrationTests.csproj --no-build --configuration Release --verbosity normal
-        env_file:
-          - .env.example
+        env:
+          DB_HOST: postgres
+          DB_NAME: dotnetrestapi
+          DB_USER: postgres
+          DB_PASSWORD: password
 
 
   docker-verification:
