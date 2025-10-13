@@ -33,7 +33,7 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    protected static StringContent CreateJsonContent(object obj)
+    protected static StringContent CreateJsonContent(object? obj)
     {
         var json = JsonSerializer.Serialize(obj);
         return new StringContent(json, Encoding.UTF8, "application/json");
