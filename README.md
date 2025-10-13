@@ -135,6 +135,62 @@ curl -X GET http://localhost:5000/customers \
 - `GET /admin/{username}` - Get admin info
 - `POST /admin` - Create new admin
 
+## Docker Setup
+
+### Quick Start with Deployment Script
+
+Use the automated deployment script for easy management:
+
+```bash
+# Interactive mode (recommended)
+./scripts/deploy.sh
+
+# Direct commands
+./scripts/deploy.sh 2    # Start services
+./scripts/deploy.sh 4    # Restart services
+./scripts/deploy.sh 7    # Check status
+```
+
+### Manual Docker Commands
+
+```bash
+# Setup environment
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Start all services
+docker compose up --build
+
+# Background mode
+docker compose up -d
+
+# View logs
+docker compose logs -f dotnetrestapi
+
+# Stop services
+docker compose down
+```
+
+### Access Points
+
+- **API**: http://localhost:5131
+- **Swagger UI**: http://localhost:5131/swagger
+- **Health Check**: http://localhost:5131/health
+
+### Deploy Script Options
+
+The `deploy.sh` script provides:
+
+1. **Build application** - Rebuild Docker image
+2. **Start services** - Launch API + PostgreSQL with health checks
+3. **Stop services** - Graceful shutdown
+4. **Restart services** - Full rebuild and restart
+5. **View logs** - Follow real-time logs
+6. **Complete reset** - Remove all data (⚠️ destructive)
+7. **Services status** - Check container health
+
+**Prerequisites**: Docker Desktop installed and running.
+
 ## Development
 
 ### Project Structure
