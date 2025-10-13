@@ -163,7 +163,7 @@ public class BooksControllerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task CreateBook_WithoutAuthentication_ShouldReturnUnauthorized()
+    public async Task CreateBook_WithoutAuthentication_ShouldReturnCreated()
     {
         // Arrange
         var bookCreateDto = new BookCreateDto
@@ -178,7 +178,11 @@ public class BooksControllerTests : IntegrationTestBase
         var response = await HttpClient.PostAsync("/Books", CreateJsonContent(bookCreateDto));
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var createdBook = await DeserializeResponseAsync<BookDto>(response);
+        createdBook.Should().NotBeNull();
+        createdBook.Title.Should().Be("New Test Book");
     }
 
     [Theory]

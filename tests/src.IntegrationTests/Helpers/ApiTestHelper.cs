@@ -64,27 +64,53 @@ public class ApiTestHelper
             Password = password
         };
 
-        // Use reflection to access protected methods
-        var httpClientProperty = typeof(IntegrationTestBase).GetProperty("HttpClient",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var httpClient = httpClientProperty?.GetValue(_testBase) as HttpClient;
+        // Access HttpClient directly since it's a protected property
+        var httpClient = GetHttpClient();
 
-        var createJsonContentMethod = typeof(IntegrationTestBase).GetMethod("CreateJsonContent",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var jsonContent = createJsonContentMethod?.Invoke(_testBase, new object[] { loginRequest }) as StringContent;
+        // Use static method directly
+        var jsonContent = CreateJsonContent(loginRequest);
 
-        var loginResponse = await httpClient!.PostAsync("/Auth/login", jsonContent);
+        var loginResponse = await httpClient.PostAsync("/Auth/login", jsonContent);
 
-        var deserializeMethod = typeof(IntegrationTestBase).GetMethod("DeserializeResponseAsync",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var genericMethod = deserializeMethod?.MakeGenericMethod(typeof(LoginResponseDto));
-        var task = genericMethod?.Invoke(_testBase, new object[] { loginResponse }) as Task<LoginResponseDto>;
-        var loginResult = await task!;
+        // Use static method directly
+        var loginResult = await DeserializeResponseAsync<LoginResponseDto>(loginResponse);
 
         httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", loginResult.Token);
+            new AuthenticationHeaderValue("Bearer", loginResult!.Token);
 
         return (createdAdmin, loginResult);
+    }
+
+    /// <summary>
+    /// Gets the HttpClient from the test base
+    /// </summary>
+    private HttpClient GetHttpClient()
+    {
+        var httpClientField = typeof(IntegrationTestBase).GetField("HttpClient",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        return httpClientField?.GetValue(_testBase) as HttpClient ??
+               throw new InvalidOperationException("Could not access HttpClient from IntegrationTestBase");
+    }
+
+    /// <summary>
+    /// Creates JSON content using the base class method
+    /// </summary>
+    private static StringContent CreateJsonContent(object? obj)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(obj);
+        return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+    }
+
+    /// <summary>
+    /// Deserializes HTTP response using the base class method
+    /// </summary>
+    private static async Task<T?> DeserializeResponseAsync<T>(HttpResponseMessage response)
+    {
+        var content = await response.Content.ReadAsStringAsync();
+        return System.Text.Json.JsonSerializer.Deserialize<T>(content, new System.Text.Json.JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
     }
 
     /// <summary>
@@ -115,9 +141,9 @@ public class ApiTestHelper
     /// </summary>
     public void ClearAuthentication()
     {
-        var httpClientProperty = typeof(IntegrationTestBase).GetProperty("HttpClient",
+        var httpClientField = typeof(IntegrationTestBase).GetField("HttpClient",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var httpClient = httpClientProperty?.GetValue(_testBase) as HttpClient;
+        var httpClient = httpClientField?.GetValue(_testBase) as HttpClient;
         httpClient!.DefaultRequestHeaders.Authorization = null;
     }
 
@@ -235,24 +261,15 @@ public class ApiTestHelper
             BookId = bookId
         };
 
-        // Use reflection to access protected methods
-        var httpClientProperty = typeof(IntegrationTestBase).GetProperty("HttpClient",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var httpClient = httpClientProperty?.GetValue(_testBase) as HttpClient;
+        // Use helper methods instead of reflection
+        var httpClient = GetHttpClient();
+        var jsonContent = CreateJsonContent(reservationCreateDto);
 
-        var createJsonContentMethod = typeof(IntegrationTestBase).GetMethod("CreateJsonContent",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var jsonContent =
-            createJsonContentMethod?.Invoke(_testBase, new object[] { reservationCreateDto }) as StringContent;
-
-        var response = await httpClient!.PostAsync("/Reservations", jsonContent);
+        var response = await httpClient.PostAsync("/Reservations", jsonContent);
         response.EnsureSuccessStatusCode();
 
-        var deserializeMethod = typeof(IntegrationTestBase).GetMethod("DeserializeResponseAsync",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var genericMethod = deserializeMethod?.MakeGenericMethod(typeof(ReservationDto));
-        var task = genericMethod?.Invoke(_testBase, new object[] { response }) as Task<ReservationDto>;
-        return await task!;
+        var result = await DeserializeResponseAsync<ReservationDto>(response);
+        return result!;
     }
 
     /// <summary>
@@ -308,63 +325,6 @@ public class ApiTestHelper
         }
     }
 
-    /// <summary>
-    /// Creates a CustomerCreateDto with default valid values
-    /// </summary>
-    /// <param name="firstName">First name (default: "Test")</param>
-    /// <param name="lastName">Last name (default: "Customer")</param>
-    /// <param name="email">Email (default: "test@example.com")</param>
-    /// <returns>CustomerCreateDto instance</returns>
-    public static CustomerCreateDto CreateValidCustomerDto(
-        string firstName = "Test",
-        string lastName = "Customer",
-        string email = "test@example.com")
-    {
-        return new CustomerCreateDto
-        {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email
-        };
-    }
-
-    /// <summary>
-    /// Creates a BookCreateDto with default valid values
-    /// </summary>
-    /// <param name="title">Book title (default: "Test Book")</param>
-    /// <param name="author">Book author (default: "Test Author")</param>
-    /// <param name="isbn">Book ISBN (default: "1234567890")</param>
-    /// <param name="status">Book status (default: Available)</param>
-    /// <returns>BookCreateDto instance</returns>
-    public static BookCreateDto CreateValidBookDto(
-        string title = "Test Book",
-        string author = "Test Author",
-        string isbn = "1234567890",
-        BookStatus status = BookStatus.Available)
-    {
-        return new BookCreateDto
-        {
-            Title = title,
-            Author = author,
-            ISBN = isbn,
-            Status = status
-        };
-    }
-
-    /// <summary>
-    /// Creates a ReservationCreateDto with specified customer and book IDs
-    /// </summary>
-    /// <param name="customerId">Customer ID</param>
-    /// <param name="bookId">Book ID</param>
-    /// <returns>ReservationCreateDto instance</returns>
-    public static ReservationCreateDto CreateValidReservationDto(int customerId, int bookId)
-    {
-        return new ReservationCreateDto
-        {
-            CustomerId = customerId,
-            BookId = bookId
-        };
-    }
 
     /// <summary>
     /// Waits for database synchronization (useful after HTTP operations)

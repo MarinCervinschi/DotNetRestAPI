@@ -145,7 +145,7 @@ public class ReservationsControllerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task CreateReservation_WithUnavailableBook_ShouldReturnBadRequest()
+    public async Task CreateReservation_WithUnavailableBook_ShouldReturnConflict()
     {
         // Arrange
         await _apiHelper.SetupAuthenticationAsync();
@@ -162,11 +162,11 @@ public class ReservationsControllerTests : IntegrationTestBase
         var response = await HttpClient.PostAsync("/Reservations", CreateJsonContent(reservationCreateDto));
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
     [Fact]
-    public async Task CreateReservation_WithInvalidCustomerId_ShouldReturnBadRequest()
+    public async Task CreateReservation_WithInvalidCustomerId_ShouldReturnNotFound()
     {
         // Arrange
         await _apiHelper.SetupAuthenticationAsync();
@@ -182,11 +182,11 @@ public class ReservationsControllerTests : IntegrationTestBase
         var response = await HttpClient.PostAsync("/Reservations", CreateJsonContent(reservationCreateDto));
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
-    public async Task CreateReservation_WithInvalidBookId_ShouldReturnBadRequest()
+    public async Task CreateReservation_WithInvalidBookId_ShouldReturnNotFound()
     {
         // Arrange
         await _apiHelper.SetupAuthenticationAsync();
@@ -202,7 +202,7 @@ public class ReservationsControllerTests : IntegrationTestBase
         var response = await HttpClient.PostAsync("/Reservations", CreateJsonContent(reservationCreateDto));
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
