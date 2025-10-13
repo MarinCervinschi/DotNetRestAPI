@@ -2,7 +2,7 @@
 
 ## Development Guidelines
 
-This project follows the coding standards defined in [StyleGuide.md](.agent/styleGuide.md).
+This project follows the coding standards defined in [StyleGuide.md](../.agent/styleGuide.md).
 
 ### Key Reminders:
 - ✅ Implement only what is requested
