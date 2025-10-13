@@ -27,7 +27,10 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <Folder Include="Infrastructure\Data\Migrations\"/>
+        <None Include="..\.agent\styleGuide.md">
+            <Link>StyleGuide.md</Link>
+        </None>
+        <Folder Include="Infrastructure\Data\Migrations\" />
     </ItemGroup>
 
 </Project>
