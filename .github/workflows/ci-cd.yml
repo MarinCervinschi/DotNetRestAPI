@@ -92,20 +92,20 @@ jobs:
       - name: Test Docker Compose configuration
         run: |
           # Validate compose file syntax
-          docker-compose config
+          docker compose config
 
           # Build services without starting them
-          docker-compose build
+          docker compose build
 
           # Start services in background
-          docker-compose up -d
+          docker compose up -d
 
           # Wait for services to be ready
           echo "Waiting for services to start..."
           sleep 30
 
           # Check if services are running
-          docker-compose ps
+          docker compose ps
 
           # Check API health (if you have a health endpoint)
           echo "Testing API availability..."
@@ -113,10 +113,10 @@ jobs:
 
           # Check logs for any startup errors
           echo "Checking application logs..."
-          docker-compose logs dotnetrestapi
+          docker compose logs dotnetrestapi
 
           # Cleanup
-          docker-compose down -v
+          docker compose down -v
 
       - name: Docker system info
         run: |
