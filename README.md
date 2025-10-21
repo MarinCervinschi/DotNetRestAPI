@@ -101,7 +101,7 @@ The seeding is **idempotent** - you can run it multiple times safely.
 
 1. **Login to get JWT token:**
 ```bash
-curl -X POST http://localhost:5000/auth/login \
+curl -X POST http://localhost:5163/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "username": "admin",
@@ -111,7 +111,7 @@ curl -X POST http://localhost:5000/auth/login \
 
 2. **Use token for protected endpoints:**
 ```bash
-curl -X GET http://localhost:5000/customers \
+curl -X GET http://localhost:5163/customers \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
